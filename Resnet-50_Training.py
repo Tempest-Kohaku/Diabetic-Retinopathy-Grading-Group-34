@@ -1,7 +1,7 @@
 #======================================================================#
 # python3 -m venv venv
-#source venv/bin/activate
-#pip install torch torchvision matplotlib pandas openpyxl scikit-learn tqdm
+# source venv/bin/activate
+# pip install torch torchvision matplotlib pandas openpyxl scikit-learn tqdm
 #======================================================================#
 
 import os
@@ -14,6 +14,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from torchvision import models, transforms
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score
 from tqdm import tqdm
 
@@ -37,13 +38,9 @@ checkpoint_path = "checkpoints/checkpoint.pth"
 
 # ===================== DATASET =====================
 class ImageDataset(Dataset):
-    def __init__(self, data_dir, label_dict, transform=None):
-        self.samples = []
+    def __init__(self, samples, transform=None):
+        self.samples = samples
         self.transform = transform
-
-        for fname in os.listdir(data_dir):
-            if fname in label_dict:
-                self.samples.append((os.path.join(data_dir, fname), label_dict[fname]))
 
     def __len__(self):
         return len(self.samples)
@@ -60,9 +57,14 @@ class ImageDataset(Dataset):
 # ===================== FUNCTIONS =====================
 def load_labels(path):
     df = pd.read_excel(path)
+
+    # Clean filenames
+    df['filename'] = df['filename'].astype(str).str.strip()
+
     label_dict = dict(zip(df['filename'], df['label']))
     num_classes = len(set(label_dict.values()))
     return label_dict, num_classes
+
 
 def get_transform():
     return transforms.Compose([
@@ -71,23 +73,77 @@ def get_transform():
                              [0.229,0.224,0.225])
     ])
 
+
+def build_file_mapping():
+    """
+    Maps base filename (no extension, lowercase) -> actual filename in folder
+    """
+    mapping = {}
+    for f in os.listdir(data_dir):
+        base = os.path.splitext(f)[0].strip().lower()
+        mapping[base] = f
+    return mapping
+
+
+def get_samples(label_dict):
+    file_map = build_file_mapping()
+
+    samples = []
+    missing = 0
+
+    for fname, label in label_dict.items():
+        key = fname.strip().lower()
+
+        if key in file_map:
+            actual_file = file_map[key]
+            full_path = os.path.join(data_dir, actual_file)
+            samples.append((full_path, label))
+        else:
+            print(f"Missing file: {fname}")
+            missing += 1
+
+    print(f"\nTotal valid images: {len(samples)}")
+    print(f"Missing images: {missing}")
+
+    return samples
+
+
 def get_loaders(label_dict):
-    dataset = ImageDataset(data_dir, label_dict, get_transform())
+    samples = get_samples(label_dict)
 
-    train_size = int(0.8235 * len(dataset))
-    val_size = len(dataset) - train_size
+    # Separate paths and labels
+    paths = [s[0] for s in samples]
+    labels = [s[1] for s in samples]
 
-    train_ds, val_ds = torch.utils.data.random_split(dataset, [train_size, val_size])
+    # Stratified split
+    train_paths, val_paths, train_labels, val_labels = train_test_split(
+        paths,
+        labels,
+        test_size=0.15,
+        stratify=labels,
+        random_state=42
+    )
 
+    # Rebuild samples
+    train_samples = list(zip(train_paths, train_labels))
+    val_samples = list(zip(val_paths, val_labels))
+
+    # Create datasets
+    train_ds = ImageDataset(train_samples, get_transform())
+    val_ds = ImageDataset(val_samples, get_transform())
+
+    # DataLoaders
     train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
 
     return train_loader, val_loader
 
+
 def build_model(num_classes, device):
     model = models.resnet50(pretrained=True)
     model.fc = nn.Linear(model.fc.in_features, num_classes)
     return model.to(device)
+
 
 def train_epoch(model, loader, optimizer, criterion, device):
     model.train()
@@ -108,6 +164,7 @@ def train_epoch(model, loader, optimizer, criterion, device):
         loop.set_postfix(loss=loss.item())
 
     return total_loss / len(loader)
+
 
 def evaluate(model, loader, criterion, device):
     model.eval()
@@ -130,6 +187,7 @@ def evaluate(model, loader, criterion, device):
     f1 = f1_score(labels, preds, average='weighted')
     return total_loss / len(loader), f1
 
+
 def plot_losses(train_losses, val_losses):
     plt.figure()
     plt.plot(train_losses, label="Train")
@@ -140,6 +198,7 @@ def plot_losses(train_losses, val_losses):
     plt.title("Training vs Validation Loss")
     plt.savefig("plots/loss_plot.png")
     plt.close()
+
 
 # ===================== MAIN =====================
 def main():
@@ -207,6 +266,7 @@ def main():
 
         # Plot
         plot_losses(train_losses, val_losses)
+
 
 if __name__ == "__main__":
     main()
