@@ -1,3 +1,9 @@
+#======================================================================#
+# python3 -m venv venv
+#source venv/bin/activate
+#pip install torch torchvision matplotlib pandas openpyxl scikit-learn tqdm seaborn pillow
+#======================================================================#
+
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
