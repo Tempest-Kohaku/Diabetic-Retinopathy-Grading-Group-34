@@ -1,2 +1,4 @@
 dataset
-main.ipynb
+.venv/
+__pycache__/
+.ipynb_checkpoints/
