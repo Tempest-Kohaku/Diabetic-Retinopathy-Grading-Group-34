@@ -14,5 +14,11 @@ Diabetic Retinopathy Grading using Deep Learning (PyTorch): A machine learning p
 10. Visualize training curves (losses, accuracy)                                                            -   [ ]
 11. Log training and test data                                                                              -   [ ]
 12. Experiment with adding warmup schedulers, changing optimisers, LRs, weight_decays, batch_sizes, etc     -   [ ] 
-    1. Batch Size = 16, LR = 3e-4, Weight_Decay = 1e-4, AdamW Optimizer, Cosine Scheduling                          [ ]
+    1. Batch Size = 16, LR = 3e-4, Weight_Decay = 1e-4, AdamW Optimizer, Cosine Scheduling                          [x]
+    2. LR = 1e-4, Epoch = 30
+    3. LR = 3e-4, Epoch = 30
+    4. Add label-smoothing to CrossEntropyLoss
+    5. Use WeightedRandomSampler instead of CrossEntropyLoss for sample-based criterion
+    6. Change criterion to treat problem as a single class problem by using MSELoss or SmoothL1Loss criterion. Have a similar regression head instead of CrossEntropyLoss.
+    7. Rotate and flip the test images and average softmax result
 13. Visualise evaluation                                                                                    -   [ ]
