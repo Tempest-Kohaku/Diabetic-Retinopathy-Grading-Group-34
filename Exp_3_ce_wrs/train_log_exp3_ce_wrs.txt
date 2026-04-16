@@ -1,0 +1,67 @@
+================================================================================
+TRAINING RUN LOG
+================================================================================
+Run started            : 2026-04-15 16:47:01
+Model                  : swin_base_patch4_window12_384
+Num classes            : 5
+Batch size             : 15
+Learning rate          : 3e-05
+Num epochs             : 20
+Optimizer              : AdamW
+Train loss             : CrossEntropyLoss
+Validation loss        : CrossEntropyLoss
+Imbalance handling     : WeightedRandomSampler only
+Top model saving       : Top 3 by validation QWK
+Plots                  : Loss curve + per-class recall curve
+Seed                   : 3
+
+IMPORTANT TECHNIQUES USED
+--------------------------------------------------------------------------------
+Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(degrees=0, translate=(0.05,0.05))
+Loss function          : CrossEntropyLoss
+Imbalance technique    : WeightedRandomSampler(replacement=True)
+Metrics                : Train loss, Validation loss, QWK, Macro F1, per-class recall
+
+CLASS STATISTICS
+--------------------------------------------------------------------------------
+Train class counts     : {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts       : {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+Class weights          : {0: 0.060669999569654465, 1: 0.6407619714736938, 2: 0.2959209978580475, 3: 1.793300986289978, 4: 2.2093470096588135}
+
+EPOCH METRICS
+--------------------------------------------------------------------------------
+Epoch 01 | LR_used=0.00003000 | TrainLoss=0.9443 | ValLoss=1.3619 | QWK=0.4445 | MacroF1=0.3709 | Recall[class_0=0.2070, class_1=0.5637, class_2=0.5922, class_3=0.6190, class_4=0.6765]
+Epoch 02 | LR_used=0.00002982 | TrainLoss=0.6608 | ValLoss=1.3125 | QWK=0.5004 | MacroF1=0.4033 | Recall[class_0=0.3105, class_1=0.5949, class_2=0.5791, class_3=0.5079, class_4=0.7451]
+Epoch 03 | LR_used=0.00002927 | TrainLoss=0.5346 | ValLoss=0.8209 | QWK=0.6924 | MacroF1=0.5328 | Recall[class_0=0.8102, class_1=0.3059, class_2=0.5752, class_3=0.3730, class_4=0.6961]
+Epoch 04 | LR_used=0.00002837 | TrainLoss=0.4489 | ValLoss=1.0115 | QWK=0.6497 | MacroF1=0.5019 | Recall[class_0=0.6769, class_1=0.3683, class_2=0.6641, class_3=0.3016, class_4=0.7059]
+Epoch 05 | LR_used=0.00002714 | TrainLoss=0.3758 | ValLoss=0.9851 | QWK=0.6382 | MacroF1=0.5244 | Recall[class_0=0.7241, class_1=0.3116, class_2=0.6876, class_3=0.3254, class_4=0.5882]
+Epoch 06 | LR_used=0.00002561 | TrainLoss=0.3140 | ValLoss=1.0696 | QWK=0.6501 | MacroF1=0.5235 | Recall[class_0=0.7292, class_1=0.3739, class_2=0.6235, class_3=0.3492, class_4=0.6961]
+Epoch 07 | LR_used=0.00002382 | TrainLoss=0.2574 | ValLoss=1.0334 | QWK=0.6871 | MacroF1=0.5303 | Recall[class_0=0.8332, class_1=0.1955, class_2=0.6484, class_3=0.3889, class_4=0.6765]
+Epoch 08 | LR_used=0.00002181 | TrainLoss=0.2151 | ValLoss=1.1193 | QWK=0.7106 | MacroF1=0.5591 | Recall[class_0=0.8429, class_1=0.2748, class_2=0.5908, class_3=0.4048, class_4=0.6765]
+Epoch 09 | LR_used=0.00001964 | TrainLoss=0.1841 | ValLoss=1.4340 | QWK=0.6667 | MacroF1=0.5301 | Recall[class_0=0.7603, class_1=0.3456, class_2=0.5908, class_3=0.4683, class_4=0.6373]
+Epoch 10 | LR_used=0.00001735 | TrainLoss=0.1617 | ValLoss=1.5015 | QWK=0.7210 | MacroF1=0.5456 | Recall[class_0=0.8879, class_1=0.2181, class_2=0.6144, class_3=0.3095, class_4=0.6569]
+Epoch 11 | LR_used=0.00001500 | TrainLoss=0.1387 | ValLoss=1.6257 | QWK=0.6747 | MacroF1=0.5425 | Recall[class_0=0.8257, class_1=0.1983, class_2=0.6902, class_3=0.3730, class_4=0.6275]
+Epoch 12 | LR_used=0.00001265 | TrainLoss=0.1189 | ValLoss=1.7522 | QWK=0.7083 | MacroF1=0.5601 | Recall[class_0=0.8788, class_1=0.1558, class_2=0.6784, class_3=0.4048, class_4=0.6569]
+Epoch 13 | LR_used=0.00001036 | TrainLoss=0.1002 | ValLoss=1.9872 | QWK=0.7226 | MacroF1=0.5614 | Recall[class_0=0.9174, class_1=0.1615, class_2=0.6288, class_3=0.3413, class_4=0.6176]
+Epoch 14 | LR_used=0.00000819 | TrainLoss=0.0814 | ValLoss=2.1640 | QWK=0.7344 | MacroF1=0.5641 | Recall[class_0=0.9236, class_1=0.1530, class_2=0.6013, class_3=0.3968, class_4=0.6569]
+Epoch 15 | LR_used=0.00000618 | TrainLoss=0.0738 | ValLoss=2.2010 | QWK=0.7314 | MacroF1=0.5649 | Recall[class_0=0.9257, class_1=0.1841, class_2=0.5660, class_3=0.3730, class_4=0.6373]
+Epoch 16 | LR_used=0.00000439 | TrainLoss=0.0529 | ValLoss=2.3545 | QWK=0.7302 | MacroF1=0.5549 | Recall[class_0=0.9040, class_1=0.1275, class_2=0.6471, class_3=0.3889, class_4=0.6373]
+Epoch 17 | LR_used=0.00000286 | TrainLoss=0.0396 | ValLoss=2.4586 | QWK=0.7311 | MacroF1=0.5621 | Recall[class_0=0.9161, class_1=0.1530, class_2=0.6366, class_3=0.3730, class_4=0.6275]
+Epoch 18 | LR_used=0.00000163 | TrainLoss=0.0425 | ValLoss=2.5380 | QWK=0.7278 | MacroF1=0.5555 | Recall[class_0=0.9220, class_1=0.1275, class_2=0.6366, class_3=0.3492, class_4=0.6373]
+Epoch 19 | LR_used=0.00000073 | TrainLoss=0.0406 | ValLoss=2.5366 | QWK=0.7327 | MacroF1=0.5663 | Recall[class_0=0.9252, class_1=0.1331, class_2=0.6288, class_3=0.3968, class_4=0.6275]
+Epoch 20 | LR_used=0.00000018 | TrainLoss=0.0356 | ValLoss=2.5504 | QWK=0.7340 | MacroF1=0.5637 | Recall[class_0=0.9260, class_1=0.1275, class_2=0.6353, class_3=0.3968, class_4=0.6275]
+
+--------------------------------------------------------------------------------
+Training completed at   : 2026-04-15 20:33:57
+Final Val Loss          : 2.5504
+Final QWK               : 0.7340
+Final Macro F1          : 0.5637
+Final Recall            : class_0=0.9260, class_1=0.1275, class_2=0.6353, class_3=0.3968, class_4=0.6275
+Loss Plot               : plots/train_val_loss (Experiment 3).png
+Recall Plot             : plots/per_class_recall (Experiment 3).png
+
+TOP SAVED MODELS
+--------------------------------------------------------------------------------
+Rank 1: Epoch=14, QWK=0.7344, Path=models/model_epoch_014_qwk_0.7344.pth
+Rank 2: Epoch=20, QWK=0.7340, Path=models/model_epoch_020_qwk_0.7340.pth
+Rank 3: Epoch=19, QWK=0.7327, Path=models/model_epoch_019_qwk_0.7327.pth

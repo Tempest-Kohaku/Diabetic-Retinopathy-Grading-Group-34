@@ -1,0 +1,78 @@
+================================================================================
+TRAINING RUN LOG
+================================================================================
+Run started            : 2026-04-15 21:38:07
+Model                  : swin_base_patch4_window12_384
+Num classes            : 5
+Batch size             : 15
+Learning rate          : 3e-05
+Num epochs             : 30
+Optimizer              : AdamW
+Train loss             : Weighted Focal Loss (gamma=2.0)
+Validation loss        : CrossEntropyLoss (logged) + Focal Loss (plotted)
+Imbalance handling     : Class-weighted focal loss only
+Top model saving       : Top 3 by validation QWK
+Plots                  : Focal loss curve + per-class recall curve
+Seed                   : 3
+
+IMPORTANT TECHNIQUES USED
+--------------------------------------------------------------------------------
+Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(degrees=0, translate=(0.05,0.05))
+Loss function          : Weighted focal loss (gamma=2.0)
+Imbalance technique    : Class-weighted focal loss
+Metrics                : Train focal loss, Validation CE loss, Validation focal loss, QWK, Macro F1, per-class recall
+
+CLASS STATISTICS
+--------------------------------------------------------------------------------
+Train class counts     : {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts       : {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+Focal alpha weights    : {0: 0.060669999569654465, 1: 0.6407619714736938, 2: 0.2959209978580475, 3: 1.793300986289978, 4: 2.2093470096588135}
+
+EPOCH METRICS
+--------------------------------------------------------------------------------
+Epoch 01 | LR_used=0.00003000 | TrainFocalLoss=0.1663 | ValCELoss=0.9711 | ValFocalLoss=0.1232 | QWK=0.6325 | MacroF1=0.4809 | Recall[class_0=0.6903, class_1=0.3853, class_2=0.4183, class_3=0.7698, class_4=0.6078]
+Epoch 02 | LR_used=0.00002992 | TrainFocalLoss=0.1295 | ValCELoss=0.9881 | ValFocalLoss=0.1342 | QWK=0.5392 | MacroF1=0.4531 | Recall[class_0=0.2292, class_1=0.8159, class_2=0.4915, class_3=0.6667, class_4=0.5686]
+Epoch 03 | LR_used=0.00002967 | TrainFocalLoss=0.1184 | ValCELoss=0.9009 | ValFocalLoss=0.1271 | QWK=0.6938 | MacroF1=0.5164 | Recall[class_0=0.8327, class_1=0.2210, class_2=0.5686, class_3=0.5317, class_4=0.6961]
+Epoch 04 | LR_used=0.00002927 | TrainFocalLoss=0.1060 | ValCELoss=0.8605 | ValFocalLoss=0.1403 | QWK=0.6999 | MacroF1=0.5411 | Recall[class_0=0.7609, class_1=0.3626, class_2=0.5373, class_3=0.5238, class_4=0.6569]
+Epoch 05 | LR_used=0.00002870 | TrainFocalLoss=0.0991 | ValCELoss=0.8562 | ValFocalLoss=0.1235 | QWK=0.7046 | MacroF1=0.5314 | Recall[class_0=0.8105, class_1=0.2861, class_2=0.5725, class_3=0.5635, class_4=0.7353]
+Epoch 06 | LR_used=0.00002799 | TrainFocalLoss=0.0892 | ValCELoss=0.8645 | ValFocalLoss=0.1371 | QWK=0.6669 | MacroF1=0.5206 | Recall[class_0=0.7220, class_1=0.3201, class_2=0.6013, class_3=0.6349, class_4=0.6667]
+Epoch 07 | LR_used=0.00002714 | TrainFocalLoss=0.0808 | ValCELoss=0.8777 | ValFocalLoss=0.1371 | QWK=0.6752 | MacroF1=0.5110 | Recall[class_0=0.7220, class_1=0.3881, class_2=0.5464, class_3=0.6190, class_4=0.7255]
+Epoch 08 | LR_used=0.00002615 | TrainFocalLoss=0.0719 | ValCELoss=0.7303 | ValFocalLoss=0.1974 | QWK=0.7344 | MacroF1=0.5588 | Recall[class_0=0.8831, class_1=0.3144, class_2=0.5804, class_3=0.2698, class_4=0.5686]
+Epoch 09 | LR_used=0.00002504 | TrainFocalLoss=0.0630 | ValCELoss=0.7947 | ValFocalLoss=0.1967 | QWK=0.7164 | MacroF1=0.5576 | Recall[class_0=0.7858, class_1=0.4561, class_2=0.5778, class_3=0.3492, class_4=0.7059]
+Epoch 10 | LR_used=0.00002382 | TrainFocalLoss=0.0552 | ValCELoss=0.7453 | ValFocalLoss=0.2145 | QWK=0.7304 | MacroF1=0.5663 | Recall[class_0=0.8536, class_1=0.3229, class_2=0.5686, class_3=0.4206, class_4=0.7059]
+Epoch 11 | LR_used=0.00002250 | TrainFocalLoss=0.0455 | ValCELoss=0.7869 | ValFocalLoss=0.2231 | QWK=0.6687 | MacroF1=0.5378 | Recall[class_0=0.7678, class_1=0.2663, class_2=0.6745, class_3=0.5079, class_4=0.6667]
+Epoch 12 | LR_used=0.00002110 | TrainFocalLoss=0.0404 | ValCELoss=0.8581 | ValFocalLoss=0.2261 | QWK=0.6517 | MacroF1=0.5375 | Recall[class_0=0.6054, class_1=0.5099, class_2=0.5974, class_3=0.5714, class_4=0.5882]
+Epoch 13 | LR_used=0.00001964 | TrainFocalLoss=0.0334 | ValCELoss=0.7446 | ValFocalLoss=0.2600 | QWK=0.7126 | MacroF1=0.5622 | Recall[class_0=0.8206, class_1=0.2691, class_2=0.6562, class_3=0.4206, class_4=0.6863]
+Epoch 14 | LR_used=0.00001812 | TrainFocalLoss=0.0281 | ValCELoss=0.8361 | ValFocalLoss=0.2595 | QWK=0.6467 | MacroF1=0.5388 | Recall[class_0=0.6370, class_1=0.4419, class_2=0.6366, class_3=0.5556, class_4=0.6569]
+Epoch 15 | LR_used=0.00001657 | TrainFocalLoss=0.0230 | ValCELoss=0.7654 | ValFocalLoss=0.3094 | QWK=0.6973 | MacroF1=0.5508 | Recall[class_0=0.8131, class_1=0.3286, class_2=0.6078, class_3=0.3730, class_4=0.6078]
+Epoch 16 | LR_used=0.00001500 | TrainFocalLoss=0.0191 | ValCELoss=0.7547 | ValFocalLoss=0.3624 | QWK=0.7176 | MacroF1=0.5521 | Recall[class_0=0.8475, class_1=0.2181, class_2=0.6850, class_3=0.3413, class_4=0.6961]
+Epoch 17 | LR_used=0.00001343 | TrainFocalLoss=0.0159 | ValCELoss=0.7459 | ValFocalLoss=0.4428 | QWK=0.7264 | MacroF1=0.5613 | Recall[class_0=0.9123, class_1=0.1388, class_2=0.6444, class_3=0.3413, class_4=0.6275]
+Epoch 18 | LR_used=0.00001188 | TrainFocalLoss=0.0133 | ValCELoss=0.8034 | ValFocalLoss=0.3955 | QWK=0.6870 | MacroF1=0.5348 | Recall[class_0=0.8013, class_1=0.2380, class_2=0.6837, class_3=0.2937, class_4=0.6863]
+Epoch 19 | LR_used=0.00001036 | TrainFocalLoss=0.0107 | ValCELoss=0.7992 | ValFocalLoss=0.4485 | QWK=0.7277 | MacroF1=0.5560 | Recall[class_0=0.8807, class_1=0.1785, class_2=0.6353, class_3=0.3810, class_4=0.6765]
+Epoch 20 | LR_used=0.00000890 | TrainFocalLoss=0.0085 | ValCELoss=0.8099 | ValFocalLoss=0.4423 | QWK=0.7237 | MacroF1=0.5558 | Recall[class_0=0.8550, class_1=0.2295, class_2=0.6196, class_3=0.3889, class_4=0.6961]
+Epoch 21 | LR_used=0.00000750 | TrainFocalLoss=0.0081 | ValCELoss=0.8288 | ValFocalLoss=0.5084 | QWK=0.7151 | MacroF1=0.5647 | Recall[class_0=0.8654, class_1=0.1898, class_2=0.6967, class_3=0.3492, class_4=0.6373]
+Epoch 22 | LR_used=0.00000618 | TrainFocalLoss=0.0058 | ValCELoss=0.8216 | ValFocalLoss=0.5174 | QWK=0.7325 | MacroF1=0.5684 | Recall[class_0=0.9003, class_1=0.1700, class_2=0.6745, class_3=0.3651, class_4=0.6667]
+Epoch 23 | LR_used=0.00000496 | TrainFocalLoss=0.0048 | ValCELoss=0.8344 | ValFocalLoss=0.5628 | QWK=0.7407 | MacroF1=0.5614 | Recall[class_0=0.9298, class_1=0.1190, class_2=0.6575, class_3=0.3413, class_4=0.6863]
+Epoch 24 | LR_used=0.00000385 | TrainFocalLoss=0.0038 | ValCELoss=0.8611 | ValFocalLoss=0.5401 | QWK=0.7353 | MacroF1=0.5728 | Recall[class_0=0.8930, class_1=0.1728, class_2=0.6771, class_3=0.3810, class_4=0.6961]
+Epoch 25 | LR_used=0.00000286 | TrainFocalLoss=0.0033 | ValCELoss=0.8687 | ValFocalLoss=0.6202 | QWK=0.7461 | MacroF1=0.5735 | Recall[class_0=0.9381, class_1=0.1190, class_2=0.6614, class_3=0.3254, class_4=0.6863]
+Epoch 26 | LR_used=0.00000201 | TrainFocalLoss=0.0035 | ValCELoss=0.8695 | ValFocalLoss=0.5855 | QWK=0.7446 | MacroF1=0.5740 | Recall[class_0=0.9279, class_1=0.1501, class_2=0.6471, class_3=0.3730, class_4=0.6667]
+Epoch 27 | LR_used=0.00000130 | TrainFocalLoss=0.0028 | ValCELoss=0.8931 | ValFocalLoss=0.6084 | QWK=0.7421 | MacroF1=0.5723 | Recall[class_0=0.9316, class_1=0.1388, class_2=0.6314, class_3=0.3651, class_4=0.6863]
+Epoch 28 | LR_used=0.00000073 | TrainFocalLoss=0.0026 | ValCELoss=0.8983 | ValFocalLoss=0.6055 | QWK=0.7425 | MacroF1=0.5772 | Recall[class_0=0.9306, class_1=0.1586, class_2=0.6301, class_3=0.3889, class_4=0.6765]
+Epoch 29 | LR_used=0.00000033 | TrainFocalLoss=0.0024 | ValCELoss=0.8969 | ValFocalLoss=0.5977 | QWK=0.7444 | MacroF1=0.5772 | Recall[class_0=0.9271, class_1=0.1530, class_2=0.6405, class_3=0.3889, class_4=0.6961]
+Epoch 30 | LR_used=0.00000008 | TrainFocalLoss=0.0019 | ValCELoss=0.8993 | ValFocalLoss=0.6057 | QWK=0.7458 | MacroF1=0.5767 | Recall[class_0=0.9314, class_1=0.1445, class_2=0.6392, class_3=0.3889, class_4=0.6961]
+
+--------------------------------------------------------------------------------
+Training completed at   : 2026-04-16 03:20:34
+Final Val CE Loss       : 0.8993
+Final Val Focal Loss    : 0.6057
+Final QWK               : 0.7458
+Final Macro F1          : 0.5767
+Final Recall            : class_0=0.9314, class_1=0.1445, class_2=0.6392, class_3=0.3889, class_4=0.6961
+Loss Plot               : plots/train_val_loss (Experiment 4).png
+Recall Plot             : plots/per_class_recall (Experiment 4).png
+
+TOP SAVED MODELS
+--------------------------------------------------------------------------------
+Rank 1: Epoch=25, QWK=0.7461, Path=models/model_epoch_025_qwk_0.7461.pth
+Rank 2: Epoch=30, QWK=0.7458, Path=models/model_epoch_030_qwk_0.7458.pth
+Rank 3: Epoch=26, QWK=0.7446, Path=models/model_epoch_026_qwk_0.7446.pth
