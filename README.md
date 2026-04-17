@@ -20,5 +20,5 @@ Diabetic Retinopathy Grading using Deep Learning (PyTorch): A machine learning p
     4. Use WeightedRandomSampler with unweighted Cross Entropy for sample-based criterion                             [ ]
     5. Change criterion to treat problem as a single class problem by using MSELoss or SmoothL1Loss criterion. Have a similar regression head instead of CrossEntropyLoss.  
     6. Add label-smoothing to CrossEntropyLoss                                                                      [ ]
-    7.  Try accumulating steps to avoid OOM after increasing batch size to 64ish and learning rate to 6e-4ish   [ ]
+    7.  Try accumulating steps to avoid OOM after increasing batch size to 64ish and learning rate to 6e-4ish   [x]
 13. Visualise evaluation                                                                                    -   [x]
