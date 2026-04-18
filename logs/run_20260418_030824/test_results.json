@@ -1,8 +1,8 @@
 {
-  "loss": 1.0676734631792015,
-  "acc": 0.7583997722095672,
-  "qwk": 0.7179124034686585,
-  "ckpt_path": "models/best_efficientnet_b5_20260411_233940.pt",
-  "eval_time_s": 38.43,
-  "evaluated_at": "2026-04-18T04:30:21"
+  "loss": 0.9718518674984609,
+  "acc": 0.7804669703872438,
+  "qwk": 0.7432045416890674,
+  "ckpt_path": "models/best_efficientnet_b5_20260418_030824.pt",
+  "eval_time_s": 41.59,
+  "evaluated_at": "2026-04-18T06:18:04"
 }
