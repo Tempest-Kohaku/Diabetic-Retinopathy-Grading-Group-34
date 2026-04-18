@@ -1,0 +1,10 @@
+{
+  "best_qwk": 0.6384221496024496,
+  "best_epoch": 10,
+  "epochs_completed": 10,
+  "start_time": "2026-04-18T22:00:59",
+  "end_time": "2026-04-18T23:22:27",
+  "duration_s": 4888.1,
+  "duration_hms": "1:21:28",
+  "ckpt_path": "models/best_efficientnet_b5_20260418_220059.pt"
+}

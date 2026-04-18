@@ -1,0 +1,44 @@
+{
+  "run_ts": "20260418_220059",
+  "run_dir": "logs/run_20260418_220059",
+  "ckpt_path": "models/best_efficientnet_b5_20260418_220059.pt",
+  "seed": 42,
+  "model_name": "efficientnet_b5",
+  "num_classes": 5,
+  "img_size": 456,
+  "batch_size": 16,
+  "accum_steps": 4,
+  "effective_batch_size": 64,
+  "num_workers": 4,
+  "num_epochs": 10,
+  "warmup_epochs": 3,
+  "warmup_start_factor": 0.1,
+  "lr": 0.0003,
+  "weight_decay": 0.0001,
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "scheduler": {
+    "name": "LinearLR(warmup) -> CosineAnnealingLR",
+    "warmup_epochs": 3,
+    "warmup_start_factor": 0.1,
+    "cosine_T_max": 7,
+    "eta_min": 1e-06
+  },
+  "criterion": {
+    "name": "CrossEntropyLoss (weighted)",
+    "class_weights": [
+      0.012130721924404739,
+      0.1282279061230963,
+      0.059163469644808744,
+      0.35866037899242487,
+      0.4418175233152653
+    ]
+  },
+  "train_size": 24585,
+  "val_size": 3513,
+  "test_size": 7024,
+  "start_time": "2026-04-18T22:00:59"
+}
