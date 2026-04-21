@@ -1,0 +1,16 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp8_wce_mixup_alpha_0.2_prob_0.8
+Model                  : swin_base_patch4_window12_384
+Loaded Epoch           : 17
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test Loss              : 0.8771
+Accuracy               : 0.8045
+QWK                    : 0.7554
+Macro F1               : 0.5593
+Recall                 : C0=0.9155, C1=0.1885, C2=0.6423, C3=0.3435, C4=0.6604
+Confusion Matrix       : confusion_matrix_exp8_wce_mixup_alpha_0.2_prob_0.8.png

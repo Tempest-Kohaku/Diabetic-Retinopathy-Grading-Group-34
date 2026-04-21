@@ -1,0 +1,16 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp11_wce_label_smoothing_0.07
+Model                  : swin_base_patch4_window12_384
+Loaded Epoch           : 17
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test Loss              : 1.1476
+Accuracy               : 0.8026
+QWK                    : 0.7566
+Macro F1               : 0.5709
+Recall                 : C0=0.9068, C1=0.2295, C2=0.6423, C3=0.4351, C4=0.6321
+Confusion Matrix       : confusion_matrix_exp11_wce_label_smoothing_0.07.png

@@ -1,0 +1,69 @@
+================================================================================
+TRAINING RUN LOG
+================================================================================
+Run started            : 2026-04-16 21:37:31
+Model                  : swin_base_patch4_window12_384
+Num classes            : 5
+Batch size             : 15
+Learning rate          : 3e-05
+Num epochs             : 20
+Optimizer              : AdamW
+Train loss             : Weighted CrossEntropyLoss + MixUp
+Validation loss        : CrossEntropyLoss (logged) + Weighted CrossEntropyLoss (plotted)
+Imbalance handling     : Weighted CrossEntropyLoss only
+Top model saving       : Top 3 by validation QWK
+Plots                  : Weighted CE loss curve + per-class recall curve
+Seed                   : 3
+
+IMPORTANT TECHNIQUES USED
+--------------------------------------------------------------------------------
+Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(degrees=0, translate=(0.05,0.05))
+Loss function          : Weighted CrossEntropyLoss
+MixUp                  : Enabled (alpha=0.3, prob=1.0)
+Imbalance technique    : Class-weighted cross entropy
+Metrics                : Train weighted CE loss, Validation CE loss, Validation weighted CE loss, QWK, Macro F1, per-class recall
+
+CLASS STATISTICS
+--------------------------------------------------------------------------------
+Train class counts     : {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts       : {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+CE class weights       : {0: 0.060669999569654465, 1: 0.6407619714736938, 2: 0.2959209978580475, 3: 1.793300986289978, 4: 2.2093470096588135}
+
+EPOCH METRICS
+--------------------------------------------------------------------------------
+Epoch 01 | LR_used=0.00003000 | TrainWeightedCELoss=1.3366 | ValCELoss=0.9716 | ValWeightedCELoss=1.1187 | QWK=0.6216 | MacroF1=0.4187 | Recall[class_0=0.8960, class_1=0.0000, class_2=0.3346, class_3=0.8095, class_4=0.6863]
+Epoch 02 | LR_used=0.00002982 | TrainWeightedCELoss=1.1874 | ValCELoss=0.9692 | ValWeightedCELoss=1.0988 | QWK=0.6005 | MacroF1=0.4860 | Recall[class_0=0.6485, class_1=0.3371, class_2=0.5908, class_3=0.5794, class_4=0.6569]
+Epoch 03 | LR_used=0.00002927 | TrainWeightedCELoss=1.1497 | ValCELoss=0.8219 | ValWeightedCELoss=1.0584 | QWK=0.6604 | MacroF1=0.5084 | Recall[class_0=0.7863, class_1=0.2125, class_2=0.6706, class_3=0.3571, class_4=0.6765]
+Epoch 04 | LR_used=0.00002837 | TrainWeightedCELoss=1.0963 | ValCELoss=0.7927 | ValWeightedCELoss=1.0911 | QWK=0.7160 | MacroF1=0.5661 | Recall[class_0=0.8740, class_1=0.1785, class_2=0.6235, class_3=0.4841, class_4=0.6471]
+Epoch 05 | LR_used=0.00002714 | TrainWeightedCELoss=1.0653 | ValCELoss=1.1560 | ValWeightedCELoss=1.1013 | QWK=0.4917 | MacroF1=0.4193 | Recall[class_0=0.2437, class_1=0.6006, class_2=0.6510, class_3=0.5873, class_4=0.7353]
+Epoch 06 | LR_used=0.00002561 | TrainWeightedCELoss=1.0335 | ValCELoss=0.9170 | ValWeightedCELoss=1.1325 | QWK=0.6454 | MacroF1=0.5487 | Recall[class_0=0.7466, class_1=0.2153, class_2=0.7111, class_3=0.6667, class_4=0.6176]
+Epoch 07 | LR_used=0.00002382 | TrainWeightedCELoss=1.0013 | ValCELoss=0.7881 | ValWeightedCELoss=1.0372 | QWK=0.7160 | MacroF1=0.5485 | Recall[class_0=0.8517, class_1=0.2380, class_2=0.6052, class_3=0.5000, class_4=0.7255]
+Epoch 08 | LR_used=0.00002181 | TrainWeightedCELoss=0.9473 | ValCELoss=0.6594 | ValWeightedCELoss=1.1332 | QWK=0.7355 | MacroF1=0.5796 | Recall[class_0=0.8877, class_1=0.2096, class_2=0.6052, class_3=0.4365, class_4=0.6569]
+Epoch 09 | LR_used=0.00001964 | TrainWeightedCELoss=0.9246 | ValCELoss=0.8333 | ValWeightedCELoss=1.1129 | QWK=0.6968 | MacroF1=0.5507 | Recall[class_0=0.7003, class_1=0.5241, class_2=0.5150, class_3=0.4841, class_4=0.6569]
+Epoch 10 | LR_used=0.00001735 | TrainWeightedCELoss=0.8697 | ValCELoss=0.7088 | ValWeightedCELoss=1.1918 | QWK=0.7527 | MacroF1=0.5856 | Recall[class_0=0.8775, class_1=0.3003, class_2=0.5882, class_3=0.5714, class_4=0.6569]
+Epoch 11 | LR_used=0.00001500 | TrainWeightedCELoss=0.8296 | ValCELoss=0.8141 | ValWeightedCELoss=1.3705 | QWK=0.7082 | MacroF1=0.5761 | Recall[class_0=0.7718, class_1=0.3739, class_2=0.6497, class_3=0.6111, class_4=0.6275]
+Epoch 12 | LR_used=0.00001265 | TrainWeightedCELoss=0.7709 | ValCELoss=0.7821 | ValWeightedCELoss=1.4337 | QWK=0.7027 | MacroF1=0.5641 | Recall[class_0=0.7761, class_1=0.3683, class_2=0.6484, class_3=0.4286, class_4=0.6275]
+Epoch 13 | LR_used=0.00001036 | TrainWeightedCELoss=0.7392 | ValCELoss=0.6527 | ValWeightedCELoss=1.4127 | QWK=0.7458 | MacroF1=0.5825 | Recall[class_0=0.9126, class_1=0.1671, class_2=0.6431, class_3=0.5397, class_4=0.6275]
+Epoch 14 | LR_used=0.00000819 | TrainWeightedCELoss=0.7066 | ValCELoss=0.8910 | ValWeightedCELoss=1.3558 | QWK=0.6891 | MacroF1=0.5673 | Recall[class_0=0.6925, class_1=0.4958, class_2=0.6118, class_3=0.5397, class_4=0.6765]
+Epoch 15 | LR_used=0.00000618 | TrainWeightedCELoss=0.6622 | ValCELoss=0.7388 | ValWeightedCELoss=1.5144 | QWK=0.7209 | MacroF1=0.5742 | Recall[class_0=0.8488, class_1=0.2380, class_2=0.7046, class_3=0.4603, class_4=0.6471]
+Epoch 16 | LR_used=0.00000439 | TrainWeightedCELoss=0.6514 | ValCELoss=0.7502 | ValWeightedCELoss=1.7321 | QWK=0.7346 | MacroF1=0.5796 | Recall[class_0=0.8783, class_1=0.1983, class_2=0.7124, class_3=0.4365, class_4=0.6471]
+Epoch 17 | LR_used=0.00000286 | TrainWeightedCELoss=0.6241 | ValCELoss=0.7700 | ValWeightedCELoss=1.6806 | QWK=0.7394 | MacroF1=0.5865 | Recall[class_0=0.8587, class_1=0.2918, class_2=0.6484, class_3=0.4683, class_4=0.6569]
+Epoch 18 | LR_used=0.00000163 | TrainWeightedCELoss=0.5933 | ValCELoss=0.7795 | ValWeightedCELoss=1.6973 | QWK=0.7292 | MacroF1=0.5778 | Recall[class_0=0.8520, class_1=0.2465, class_2=0.6641, class_3=0.5000, class_4=0.6569]
+Epoch 19 | LR_used=0.00000073 | TrainWeightedCELoss=0.5943 | ValCELoss=0.7678 | ValWeightedCELoss=1.7589 | QWK=0.7358 | MacroF1=0.5869 | Recall[class_0=0.8694, class_1=0.2691, class_2=0.6562, class_3=0.4762, class_4=0.6471]
+Epoch 20 | LR_used=0.00000018 | TrainWeightedCELoss=0.5859 | ValCELoss=0.7705 | ValWeightedCELoss=1.7681 | QWK=0.7368 | MacroF1=0.5889 | Recall[class_0=0.8678, class_1=0.2720, class_2=0.6601, class_3=0.4762, class_4=0.6471]
+
+--------------------------------------------------------------------------------
+Training completed at   : 2026-04-17 01:26:43
+Final Val CE Loss       : 0.7705
+Final Val Weighted CE Loss: 1.7681
+Final QWK               : 0.7368
+Final Macro F1          : 0.5889
+Final Recall            : class_0=0.8678, class_1=0.2720, class_2=0.6601, class_3=0.4762, class_4=0.6471
+Loss Plot               : plots/train_val_loss_exp5_wce_mixup_alpha_0.3.png
+Recall Plot             : plots/per_class_recall_exp5_wce_mixup_alpha_0.3.png
+
+TOP SAVED MODELS
+--------------------------------------------------------------------------------
+Rank 1: Epoch=10, QWK=0.7527, Path=models/exp5_wce_mixup_alpha_0.3/model_epoch_010_qwk_0.7527.pth
+Rank 2: Epoch=13, QWK=0.7458, Path=models/exp5_wce_mixup_alpha_0.3/model_epoch_013_qwk_0.7458.pth
+Rank 3: Epoch=17, QWK=0.7394, Path=models/exp5_wce_mixup_alpha_0.3/model_epoch_017_qwk_0.7394.pth

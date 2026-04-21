@@ -1,0 +1,16 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp14_wce_mixup_alpha_0.2_prob_1.0_crop+CLAHE_clip1.0
+Model                  : swin_base_patch4_window12_384
+Loaded Epoch           : 15
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test Loss              : 0.6673
+Accuracy               : 0.8273
+QWK                    : 0.7800
+Macro F1               : 0.6015
+Recall                 : C0=0.9267, C1=0.2623, C2=0.6851, C3=0.4427, C4=0.6887
+Confusion Matrix       : confusion_matrix_exp14_wce_mixup_alpha_0.2_prob_1.0_crop+CLAHE_clip1.0.png
