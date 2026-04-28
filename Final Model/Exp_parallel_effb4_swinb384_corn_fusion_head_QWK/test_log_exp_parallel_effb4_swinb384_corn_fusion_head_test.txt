@@ -1,0 +1,26 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp_parallel_effb4_swinb384_corn_fusion_head_test
+Model                  : parallel_efficientnet_b4_swin_base_384
+Branch 1               : efficientnet_b4.ra2_in1k
+Branch 2               : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Fusion type            : Parallel feature fusion with MLP fusion head
+Fusion hidden dim      : 1024
+Fusion dropout         : 0.3
+Fusion head            : LayerNorm -> Linear -> GELU -> Dropout -> Linear(num_classes - 1)
+Ordinal method         : CORN
+Loaded Epoch           : 10
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test CORN Loss         : 0.4089
+Accuracy               : 0.8284
+QWK                    : 0.8095
+Micro F1               : 0.8284
+Weighted F1            : 0.8223
+Macro F1               : 0.6027
+Per-class F1           : C0=0.9246, C1=0.2937, C2=0.6441, C3=0.4682, C4=0.6829
+Recall                 : C0=0.9458, C1=0.2596, C2=0.5756, C3=0.6183, C4=0.6604
+Confusion Matrix       : confusion_matrix_exp_parallel_effb4_swinb384_corn_fusion_head_test.png

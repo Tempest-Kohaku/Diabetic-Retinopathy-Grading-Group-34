@@ -1,0 +1,94 @@
+================================================================================
+TRAINING RUN LOG
+================================================================================
+Run started            : 2026-04-28 05:28:59
+Experiment             : exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs
+Split tag              : dr_fixed_split_v1
+Model                  : parallel_efficientnet_b4_swin_base_384
+Branch 1               : efficientnet_b4.ra2_in1k
+Branch 2               : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Fusion type            : Parallel feature fusion with MLP fusion head
+Fusion hidden dim      : 1024
+Fusion dropout         : 0.3
+Fusion head            : LayerNorm -> Linear -> GELU -> Dropout -> Linear(num_classes - 1)
+Num classes            : 5
+Batch size             : 14
+Learning rate          : 3e-05
+Weight decay           : 0.0001
+Num epochs             : 20
+Optimizer              : AdamW
+Train loss             : CORN loss
+Validation loss        : CORN loss
+MixUp                  : Disabled
+Imbalance handling     : Minority-only stronger augmentation + tempered WeightedRandomSampler
+Top model saving       : Top 2 by validation QWK
+Grad checkpointing     : Enabled
+Checkpoint saving      : Disabled
+Training resume        : Disabled
+Plots                  : CORN loss curve + per-class recall curve
+Seed                   : 3
+
+IMPORTANT TECHNIQUES USED
+--------------------------------------------------------------------------------
+Parallel fusion        : EfficientNet-B4 embedding + Swin-B-384 embedding -> concatenation -> fusion head
+Base train augmentation: RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(translate=(0.05,0.05)), RandomRotation(10)
+Minority labels        : [1, 3, 4]
+Minority extra aug     : ColorJitter(brightness=0.1, contrast=0.1, saturation=0.05), RandomAffine(translate=(0.03,0.03), scale=(0.97,1.03)), RandomRotation(7)
+Ordinal method         : CORN (4 logits for 5 classes)
+Train sampler          : WeightedRandomSampler(replacement=True)
+Sampler weighting      : 1 / sqrt(class_count), normalized to mean 1
+Train samples          : 24781
+Loss function          : CORN loss
+Metrics                : Train CORN loss, Validation CORN loss, QWK, Macro F1, per-class recall
+
+CLASS STATISTICS
+--------------------------------------------------------------------------------
+Train class counts     : {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts       : {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+Sampler class weights  : {0: 0.2788670063018799, 1: 0.9062740206718445, 2: 0.615884006023407, 3: 1.5161340236663818, 4: 1.6828409433364868}
+
+FILES
+--------------------------------------------------------------------------------
+Train split path       : splits/train_split_dr_fixed_split_v1.csv
+Val split path         : splits/val_split_dr_fixed_split_v1.csv
+Metrics history path   : logs/metrics_history_exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs.csv
+Loss plot path         : plots/train_val_loss_exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs.png
+Recall plot path       : plots/per_class_recall_exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs.png
+Models directory       : models/exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs
+
+EPOCH METRICS
+--------------------------------------------------------------------------------
+Epoch 01 | LR_used=0.00003000 | TrainCORNLoss=0.2711 | ValCORNLoss=0.5619 | QWK=0.7469 | MacroF1=0.4597 | Recall[class_0=0.9641, class_1=0.0000, class_2=0.7451, class_3=0.0635, class_4=0.4412]
+Epoch 02 | LR_used=0.00002982 | TrainCORNLoss=0.1842 | ValCORNLoss=0.6062 | QWK=0.6887 | MacroF1=0.3177 | Recall[class_0=0.9287, class_1=0.0000, class_2=0.8275, class_3=0.0000, class_4=0.0196]
+Epoch 03 | LR_used=0.00002927 | TrainCORNLoss=0.1562 | ValCORNLoss=0.6849 | QWK=0.7039 | MacroF1=0.3169 | Recall[class_0=0.9622, class_1=0.0000, class_2=0.7752, class_3=0.0000, class_4=0.0000]
+Epoch 04 | LR_used=0.00002837 | TrainCORNLoss=0.1367 | ValCORNLoss=0.6610 | QWK=0.6896 | MacroF1=0.3250 | Recall[class_0=0.9582, class_1=0.0000, class_2=0.7843, class_3=0.0000, class_4=0.0196]
+Epoch 05 | LR_used=0.00002714 | TrainCORNLoss=0.1232 | ValCORNLoss=0.6693 | QWK=0.7151 | MacroF1=0.3213 | Recall[class_0=0.9434, class_1=0.0000, class_2=0.8170, class_3=0.0000, class_4=0.0196]
+Epoch 06 | LR_used=0.00002561 | TrainCORNLoss=0.1071 | ValCORNLoss=0.5897 | QWK=0.7529 | MacroF1=0.4120 | Recall[class_0=0.9617, class_1=0.0028, class_2=0.8052, class_3=0.0000, class_4=0.2941]
+Epoch 07 | LR_used=0.00002382 | TrainCORNLoss=0.0940 | ValCORNLoss=0.6734 | QWK=0.7198 | MacroF1=0.3741 | Recall[class_0=0.9676, class_1=0.0000, class_2=0.7974, class_3=0.0000, class_4=0.1471]
+Epoch 08 | LR_used=0.00002181 | TrainCORNLoss=0.0871 | ValCORNLoss=0.7260 | QWK=0.7244 | MacroF1=0.3666 | Recall[class_0=0.9708, class_1=0.0000, class_2=0.7791, class_3=0.0000, class_4=0.1275]
+Epoch 09 | LR_used=0.00001964 | TrainCORNLoss=0.0737 | ValCORNLoss=0.7416 | QWK=0.7261 | MacroF1=0.3657 | Recall[class_0=0.9544, class_1=0.0000, class_2=0.8484, class_3=0.0000, class_4=0.1176]
+Epoch 10 | LR_used=0.00001735 | TrainCORNLoss=0.0694 | ValCORNLoss=0.6933 | QWK=0.7622 | MacroF1=0.4347 | Recall[class_0=0.9727, class_1=0.0000, class_2=0.7765, class_3=0.0000, class_4=0.4020]
+Epoch 11 | LR_used=0.00001500 | TrainCORNLoss=0.0597 | ValCORNLoss=0.7987 | QWK=0.7192 | MacroF1=0.3701 | Recall[class_0=0.9794, class_1=0.0000, class_2=0.7451, class_3=0.0000, class_4=0.1373]
+Epoch 12 | LR_used=0.00001265 | TrainCORNLoss=0.0502 | ValCORNLoss=0.7559 | QWK=0.7652 | MacroF1=0.4595 | Recall[class_0=0.9601, class_1=0.0000, class_2=0.8065, class_3=0.0317, class_4=0.4706]
+Epoch 13 | LR_used=0.00001036 | TrainCORNLoss=0.0478 | ValCORNLoss=0.8373 | QWK=0.7530 | MacroF1=0.4370 | Recall[class_0=0.9509, class_1=0.0000, class_2=0.8340, class_3=0.0000, class_4=0.4118]
+Epoch 14 | LR_used=0.00000819 | TrainCORNLoss=0.0390 | ValCORNLoss=0.8374 | QWK=0.7458 | MacroF1=0.4192 | Recall[class_0=0.9743, class_1=0.0000, class_2=0.7739, class_3=0.0000, class_4=0.3137]
+Epoch 15 | LR_used=0.00000618 | TrainCORNLoss=0.0355 | ValCORNLoss=0.8500 | QWK=0.7368 | MacroF1=0.4002 | Recall[class_0=0.9619, class_1=0.0000, class_2=0.8039, class_3=0.0000, class_4=0.2451]
+Epoch 16 | LR_used=0.00000439 | TrainCORNLoss=0.0302 | ValCORNLoss=0.8826 | QWK=0.7354 | MacroF1=0.4091 | Recall[class_0=0.9598, class_1=0.0000, class_2=0.8092, class_3=0.0000, class_4=0.2843]
+Epoch 17 | LR_used=0.00000286 | TrainCORNLoss=0.0281 | ValCORNLoss=0.8967 | QWK=0.7419 | MacroF1=0.4124 | Recall[class_0=0.9767, class_1=0.0000, class_2=0.7647, class_3=0.0000, class_4=0.2843]
+Epoch 18 | LR_used=0.00000163 | TrainCORNLoss=0.0265 | ValCORNLoss=0.9257 | QWK=0.7523 | MacroF1=0.4122 | Recall[class_0=0.9767, class_1=0.0000, class_2=0.7856, class_3=0.0000, class_4=0.2745]
+Epoch 19 | LR_used=0.00000073 | TrainCORNLoss=0.0245 | ValCORNLoss=0.9048 | QWK=0.7556 | MacroF1=0.4247 | Recall[class_0=0.9684, class_1=0.0000, class_2=0.7922, class_3=0.0000, class_4=0.3431]
+Epoch 20 | LR_used=0.00000018 | TrainCORNLoss=0.0268 | ValCORNLoss=0.9070 | QWK=0.7621 | MacroF1=0.4337 | Recall[class_0=0.9753, class_1=0.0000, class_2=0.7843, class_3=0.0000, class_4=0.3725]
+
+--------------------------------------------------------------------------------
+Training completed at   : 2026-04-28 12:18:20
+Final Val CORN Loss     : 0.9070
+Final QWK               : 0.7621
+Final Macro F1          : 0.4337
+Final Recall            : class_0=0.9753, class_1=0.0000, class_2=0.7843, class_3=0.0000, class_4=0.3725
+Loss Plot               : plots/train_val_loss_exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs.png
+Recall Plot             : plots/per_class_recall_exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs.png
+
+TOP 2 SAVED MODELS
+--------------------------------------------------------------------------------
+Rank 1: Epoch=12, QWK=0.7652, Path=models/exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs/model_epoch_012_qwk_0.7652.pth
+Rank 2: Epoch=10, QWK=0.7622, Path=models/exp_parallel_effb4_swinb384_corn_fusion_head_minority_aug_wrs/model_epoch_010_qwk_0.7622.pth

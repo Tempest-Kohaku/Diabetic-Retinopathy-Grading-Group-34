@@ -1,0 +1,20 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp_series_effb4_stage3_to_swinb384_wce_mixup
+Model                  : series_efficientnet_b4_stage3_to_swin_base_384
+Stage 1 backbone       : efficientnet_b4.ra2_in1k
+Stage 1 feature index  : 3
+Stage 2 backbone       : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Series fusion          : EfficientNet-B4 stage-3 feature map -> bridge pseudo-image -> 384x384 Swin Base -> classifier
+Loaded Epoch           : 14
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test Loss              : 0.8111
+Accuracy               : 0.7768
+QWK                    : 0.6572
+Macro F1               : 0.4649
+Recall                 : C0=0.9259, C1=0.0137, C2=0.5176, C3=0.4046, C4=0.3679
+Confusion Matrix       : confusion_matrix_exp_series_effb4_stage3_to_swinb384_wce_mixup.png

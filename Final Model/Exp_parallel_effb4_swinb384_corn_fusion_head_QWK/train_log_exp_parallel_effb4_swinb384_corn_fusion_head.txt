@@ -1,0 +1,90 @@
+================================================================================
+TRAINING RUN LOG
+================================================================================
+Run started            : 2026-04-28 13:57:00
+Experiment             : exp_parallel_effb4_swinb384_corn_fusion_head
+Split tag              : dr_fixed_split_v1
+Model                  : parallel_efficientnet_b4_swin_base_384
+Branch 1               : efficientnet_b4.ra2_in1k
+Branch 2               : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Fusion type            : Parallel feature fusion with MLP fusion head
+Fusion hidden dim      : 1024
+Fusion dropout         : 0.3
+Fusion head            : LayerNorm -> Linear -> GELU -> Dropout -> Linear(num_classes - 1)
+Num classes            : 5
+Batch size             : 14
+Learning rate          : 3e-05
+Weight decay           : 0.0001
+Num epochs             : 20
+Optimizer              : AdamW
+Train loss             : CORN loss
+Validation loss        : CORN loss
+MixUp                  : Disabled
+Imbalance handling     : None
+Top model saving       : Top 2 by validation QWK
+Grad checkpointing     : Enabled
+Checkpoint saving      : Disabled
+Training resume        : Disabled
+Plots                  : CORN loss curve + per-class recall curve
+Seed                   : 3
+
+IMPORTANT TECHNIQUES USED
+--------------------------------------------------------------------------------
+Parallel fusion        : EfficientNet-B4 embedding + Swin-B-384 embedding -> concatenation -> fusion head
+Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(translate=(0.05,0.05))
+Ordinal method         : CORN (4 logits for 5 classes)
+Train sampler          : Standard shuffled batches
+Train samples          : 24781
+Loss function          : CORN loss
+Metrics                : Train CORN loss, Validation CORN loss, QWK, Macro F1, per-class recall
+
+CLASS STATISTICS
+--------------------------------------------------------------------------------
+Train class counts     : {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts       : {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+
+FILES
+--------------------------------------------------------------------------------
+Train split path       : splits/train_split_dr_fixed_split_v1.csv
+Val split path         : splits/val_split_dr_fixed_split_v1.csv
+Metrics history path   : logs/metrics_history_exp_parallel_effb4_swinb384_corn_fusion_head.csv
+Loss plot path         : plots/train_val_loss_exp_parallel_effb4_swinb384_corn_fusion_head.png
+Recall plot path       : plots/per_class_recall_exp_parallel_effb4_swinb384_corn_fusion_head.png
+Models directory       : models/exp_parallel_effb4_swinb384_corn_fusion_head
+
+EPOCH METRICS
+--------------------------------------------------------------------------------
+Epoch 01 | LR_used=0.00003000 | TrainCORNLoss=0.4059 | ValCORNLoss=0.3656 | QWK=0.7504 | MacroF1=0.4717 | Recall[class_0=0.9855, class_1=0.0737, class_2=0.5294, class_3=0.1667, class_4=0.5686]
+Epoch 02 | LR_used=0.00002982 | TrainCORNLoss=0.3394 | ValCORNLoss=0.3256 | QWK=0.7796 | MacroF1=0.5825 | Recall[class_0=0.9630, class_1=0.2521, class_2=0.5804, class_3=0.3492, class_4=0.5098]
+Epoch 03 | LR_used=0.00002927 | TrainCORNLoss=0.3153 | ValCORNLoss=0.3194 | QWK=0.7909 | MacroF1=0.5863 | Recall[class_0=0.9676, class_1=0.1416, class_2=0.6902, class_3=0.3571, class_4=0.5686]
+Epoch 04 | LR_used=0.00002837 | TrainCORNLoss=0.2941 | ValCORNLoss=0.3300 | QWK=0.8015 | MacroF1=0.6006 | Recall[class_0=0.9670, class_1=0.1473, class_2=0.6497, class_3=0.5000, class_4=0.5980]
+Epoch 05 | LR_used=0.00002714 | TrainCORNLoss=0.2762 | ValCORNLoss=0.3609 | QWK=0.7934 | MacroF1=0.5786 | Recall[class_0=0.9534, class_1=0.1700, class_2=0.6967, class_3=0.3730, class_4=0.5980]
+Epoch 06 | LR_used=0.00002561 | TrainCORNLoss=0.2511 | ValCORNLoss=0.3328 | QWK=0.8066 | MacroF1=0.5940 | Recall[class_0=0.9619, class_1=0.1558, class_2=0.7033, class_3=0.3492, class_4=0.6373]
+Epoch 07 | LR_used=0.00002382 | TrainCORNLoss=0.2317 | ValCORNLoss=0.3636 | QWK=0.7991 | MacroF1=0.5961 | Recall[class_0=0.9775, class_1=0.1926, class_2=0.6013, class_3=0.4524, class_4=0.5882]
+Epoch 08 | LR_used=0.00002181 | TrainCORNLoss=0.2111 | ValCORNLoss=0.3625 | QWK=0.8058 | MacroF1=0.5964 | Recall[class_0=0.9692, class_1=0.2181, class_2=0.6471, class_3=0.3413, class_4=0.6667]
+Epoch 09 | LR_used=0.00001964 | TrainCORNLoss=0.1866 | ValCORNLoss=0.4093 | QWK=0.7941 | MacroF1=0.5798 | Recall[class_0=0.9718, class_1=0.1756, class_2=0.6392, class_3=0.3254, class_4=0.6078]
+Epoch 10 | LR_used=0.00001735 | TrainCORNLoss=0.1626 | ValCORNLoss=0.4309 | QWK=0.8087 | MacroF1=0.5917 | Recall[class_0=0.9555, class_1=0.2295, class_2=0.5516, class_3=0.6349, class_4=0.6176]
+Epoch 11 | LR_used=0.00001500 | TrainCORNLoss=0.1415 | ValCORNLoss=0.4562 | QWK=0.8127 | MacroF1=0.6107 | Recall[class_0=0.9635, class_1=0.2096, class_2=0.6078, class_3=0.6111, class_4=0.5980]
+Epoch 12 | LR_used=0.00001265 | TrainCORNLoss=0.1259 | ValCORNLoss=0.4763 | QWK=0.8075 | MacroF1=0.6088 | Recall[class_0=0.9507, class_1=0.2521, class_2=0.6824, class_3=0.3571, class_4=0.6078]
+Epoch 13 | LR_used=0.00001036 | TrainCORNLoss=0.1086 | ValCORNLoss=0.5673 | QWK=0.7973 | MacroF1=0.5888 | Recall[class_0=0.9794, class_1=0.1643, class_2=0.5739, class_3=0.4286, class_4=0.6765]
+Epoch 14 | LR_used=0.00000819 | TrainCORNLoss=0.0933 | ValCORNLoss=0.5682 | QWK=0.8062 | MacroF1=0.5977 | Recall[class_0=0.9611, class_1=0.2266, class_2=0.5987, class_3=0.4762, class_4=0.6373]
+Epoch 15 | LR_used=0.00000618 | TrainCORNLoss=0.0799 | ValCORNLoss=0.6512 | QWK=0.8022 | MacroF1=0.5959 | Recall[class_0=0.9708, class_1=0.1983, class_2=0.5935, class_3=0.4286, class_4=0.6667]
+Epoch 16 | LR_used=0.00000439 | TrainCORNLoss=0.0684 | ValCORNLoss=0.6657 | QWK=0.7981 | MacroF1=0.6080 | Recall[class_0=0.9493, class_1=0.2408, class_2=0.6536, class_3=0.4603, class_4=0.6373]
+Epoch 17 | LR_used=0.00000286 | TrainCORNLoss=0.0633 | ValCORNLoss=0.6850 | QWK=0.8054 | MacroF1=0.6197 | Recall[class_0=0.9501, class_1=0.2266, class_2=0.6719, class_3=0.5079, class_4=0.6275]
+Epoch 18 | LR_used=0.00000163 | TrainCORNLoss=0.0584 | ValCORNLoss=0.7171 | QWK=0.8047 | MacroF1=0.6052 | Recall[class_0=0.9641, class_1=0.1955, class_2=0.6379, class_3=0.4444, class_4=0.6471]
+Epoch 19 | LR_used=0.00000073 | TrainCORNLoss=0.0530 | ValCORNLoss=0.7236 | QWK=0.8013 | MacroF1=0.6153 | Recall[class_0=0.9517, class_1=0.2181, class_2=0.6588, class_3=0.4762, class_4=0.6569]
+Epoch 20 | LR_used=0.00000018 | TrainCORNLoss=0.0505 | ValCORNLoss=0.7330 | QWK=0.8057 | MacroF1=0.6077 | Recall[class_0=0.9627, class_1=0.1955, class_2=0.6366, class_3=0.4603, class_4=0.6471]
+
+--------------------------------------------------------------------------------
+Training completed at   : 2026-04-28 20:46:15
+Final Val CORN Loss     : 0.7330
+Final QWK               : 0.8057
+Final Macro F1          : 0.6077
+Final Recall            : class_0=0.9627, class_1=0.1955, class_2=0.6366, class_3=0.4603, class_4=0.6471
+Loss Plot               : plots/train_val_loss_exp_parallel_effb4_swinb384_corn_fusion_head.png
+Recall Plot             : plots/per_class_recall_exp_parallel_effb4_swinb384_corn_fusion_head.png
+
+TOP 2 SAVED MODELS
+--------------------------------------------------------------------------------
+Rank 1: Epoch=11, QWK=0.8127, Path=models/exp_parallel_effb4_swinb384_corn_fusion_head/model_epoch_011_qwk_0.8127.pth
+Rank 2: Epoch=10, QWK=0.8087, Path=models/exp_parallel_effb4_swinb384_corn_fusion_head/model_epoch_010_qwk_0.8087.pth

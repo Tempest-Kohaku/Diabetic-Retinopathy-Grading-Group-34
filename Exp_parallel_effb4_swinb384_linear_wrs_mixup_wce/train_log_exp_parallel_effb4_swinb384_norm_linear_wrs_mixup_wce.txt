@@ -1,0 +1,88 @@
+================================================================================
+TRAINING RUN LOG
+================================================================================
+Run started            : 2026-04-24 15:49:38
+Experiment             : exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce
+Split tag              : dr_fixed_split_v1
+Model                  : parallel_efficientnet_b4_swin_base_384
+Branch 1               : efficientnet_b4.ra2_in1k
+Branch 2               : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Fusion type            : Parallel feature fusion (concatenation + LayerNorm + single Linear classifier)
+Fusion head            : LayerNorm(fusion_dim) -> Linear(fusion_dim, num_classes)
+Num classes            : 5
+Batch size             : 10
+Learning rate          : 3e-05
+Num epochs             : 20
+Optimizer              : AdamW
+Train loss             : Weighted CrossEntropyLoss + MixUp
+Validation loss        : CrossEntropyLoss (logged) + Weighted CrossEntropyLoss (plotted)
+Imbalance handling     : WeightedRandomSampler + Weighted CrossEntropyLoss
+Top model saving       : Top 2 by validation QWK
+Checkpoint saving      : Disabled
+Training resume        : Disabled
+Plots                  : Weighted CE loss curve + per-class recall curve
+Seed                   : 3
+
+IMPORTANT TECHNIQUES USED
+--------------------------------------------------------------------------------
+Parallel fusion        : EfficientNet-B4 embedding + Swin-B-384 embedding -> concatenation -> LayerNorm -> Linear classifier
+Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(degrees=0, translate=(0.05,0.05))
+Train sampler          : WeightedRandomSampler(replacement=True)
+Sampler num samples    : 24781
+Loss function          : Weighted CrossEntropyLoss with MixUp(alpha=0.2, prob=1.0)
+Imbalance technique    : Weighted sampler + class-weighted cross entropy
+Metrics                : Train weighted CE + MixUp loss, Validation CE loss, Validation weighted CE loss, QWK, Macro F1, per-class recall
+
+CLASS STATISTICS
+--------------------------------------------------------------------------------
+Train class counts     : {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts       : {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+CE class weights       : {0: 0.060669999569654465, 1: 0.6407619714736938, 2: 0.2959209978580475, 3: 1.793300986289978, 4: 2.2093470096588135}
+Sampler class weights  : {0: 0.060669999569654465, 1: 0.6407619714736938, 2: 0.2959209978580475, 3: 1.793300986289978, 4: 2.2093470096588135}
+
+FILES
+--------------------------------------------------------------------------------
+Train split path       : splits/train_split_dr_fixed_split_v1.csv
+Val split path         : splits/val_split_dr_fixed_split_v1.csv
+Metrics history path   : logs/metrics_history_exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce.csv
+Loss plot path         : plots/train_val_loss_exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce.png
+Recall plot path       : plots/per_class_recall_exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce.png
+Models directory       : models/exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce
+
+EPOCH METRICS
+--------------------------------------------------------------------------------
+Epoch 01 | LR_used=0.00003000 | TrainWeightedCEMixUpLoss=0.7487 | ValCELoss=2.1930 | ValWeightedCELoss=1.6089 | QWK=0.4682 | MacroF1=0.2390 | Recall[class_0=0.0000, class_1=0.9632, class_2=0.0850, class_3=0.8095, class_4=0.7059]
+Epoch 02 | LR_used=0.00002982 | TrainWeightedCEMixUpLoss=0.4870 | ValCELoss=2.1498 | ValWeightedCELoss=1.6334 | QWK=0.4231 | MacroF1=0.3033 | Recall[class_0=0.0086, class_1=0.9093, class_2=0.4693, class_3=0.3175, class_4=0.7745]
+Epoch 03 | LR_used=0.00002927 | TrainWeightedCEMixUpLoss=0.3995 | ValCELoss=2.3289 | ValWeightedCELoss=1.7552 | QWK=0.4164 | MacroF1=0.3057 | Recall[class_0=0.0169, class_1=0.8952, class_2=0.4118, class_3=0.6190, class_4=0.7157]
+Epoch 04 | LR_used=0.00002837 | TrainWeightedCEMixUpLoss=0.3674 | ValCELoss=1.7698 | ValWeightedCELoss=1.5523 | QWK=0.4527 | MacroF1=0.3712 | Recall[class_0=0.0716, class_1=0.8102, class_2=0.5961, class_3=0.4841, class_4=0.6471]
+Epoch 05 | LR_used=0.00002714 | TrainWeightedCEMixUpLoss=0.3344 | ValCELoss=2.0099 | ValWeightedCELoss=1.6197 | QWK=0.4087 | MacroF1=0.3613 | Recall[class_0=0.1083, class_1=0.7110, class_2=0.6065, class_3=0.5714, class_4=0.6667]
+Epoch 06 | LR_used=0.00002561 | TrainWeightedCEMixUpLoss=0.3165 | ValCELoss=1.6756 | ValWeightedCELoss=1.5439 | QWK=0.4869 | MacroF1=0.4285 | Recall[class_0=0.2786, class_1=0.6204, class_2=0.6732, class_3=0.5714, class_4=0.6765]
+Epoch 07 | LR_used=0.00002382 | TrainWeightedCEMixUpLoss=0.2902 | ValCELoss=1.2266 | ValWeightedCELoss=1.5032 | QWK=0.5558 | MacroF1=0.4719 | Recall[class_0=0.5086, class_1=0.4193, class_2=0.7229, class_3=0.4603, class_4=0.6961]
+Epoch 08 | LR_used=0.00002181 | TrainWeightedCEMixUpLoss=0.2802 | ValCELoss=1.7429 | ValWeightedCELoss=1.6322 | QWK=0.4574 | MacroF1=0.4286 | Recall[class_0=0.3190, class_1=0.5609, class_2=0.7176, class_3=0.5238, class_4=0.6471]
+Epoch 09 | LR_used=0.00001964 | TrainWeightedCEMixUpLoss=0.2560 | ValCELoss=1.0509 | ValWeightedCELoss=1.6490 | QWK=0.6504 | MacroF1=0.5382 | Recall[class_0=0.6753, class_1=0.3938, class_2=0.7516, class_3=0.3889, class_4=0.5882]
+Epoch 10 | LR_used=0.00001735 | TrainWeightedCEMixUpLoss=0.2569 | ValCELoss=1.3353 | ValWeightedCELoss=1.6334 | QWK=0.6123 | MacroF1=0.5178 | Recall[class_0=0.5630, class_1=0.4986, class_2=0.6484, class_3=0.4921, class_4=0.6373]
+Epoch 11 | LR_used=0.00001500 | TrainWeightedCEMixUpLoss=0.2318 | ValCELoss=1.5463 | ValWeightedCELoss=1.8263 | QWK=0.5879 | MacroF1=0.5020 | Recall[class_0=0.5408, class_1=0.4986, class_2=0.7516, class_3=0.3889, class_4=0.6569]
+Epoch 12 | LR_used=0.00001265 | TrainWeightedCEMixUpLoss=0.2300 | ValCELoss=1.3450 | ValWeightedCELoss=1.8709 | QWK=0.5968 | MacroF1=0.5230 | Recall[class_0=0.6206, class_1=0.3881, class_2=0.7843, class_3=0.3889, class_4=0.6275]
+Epoch 13 | LR_used=0.00001036 | TrainWeightedCEMixUpLoss=0.2089 | ValCELoss=1.2141 | ValWeightedCELoss=1.9445 | QWK=0.6741 | MacroF1=0.5529 | Recall[class_0=0.7220, class_1=0.3541, class_2=0.7203, class_3=0.4603, class_4=0.6373]
+Epoch 14 | LR_used=0.00000819 | TrainWeightedCEMixUpLoss=0.2138 | ValCELoss=0.9925 | ValWeightedCELoss=2.0904 | QWK=0.7137 | MacroF1=0.5677 | Recall[class_0=0.8469, class_1=0.1983, class_2=0.7712, class_3=0.3730, class_4=0.6078]
+Epoch 15 | LR_used=0.00000618 | TrainWeightedCEMixUpLoss=0.2092 | ValCELoss=1.0958 | ValWeightedCELoss=2.0015 | QWK=0.7008 | MacroF1=0.5651 | Recall[class_0=0.7957, class_1=0.2776, class_2=0.7673, class_3=0.3651, class_4=0.6176]
+Epoch 16 | LR_used=0.00000439 | TrainWeightedCEMixUpLoss=0.2079 | ValCELoss=1.0609 | ValWeightedCELoss=2.0796 | QWK=0.7059 | MacroF1=0.5628 | Recall[class_0=0.8121, class_1=0.2578, class_2=0.7516, class_3=0.3651, class_4=0.6176]
+Epoch 17 | LR_used=0.00000286 | TrainWeightedCEMixUpLoss=0.1976 | ValCELoss=0.9610 | ValWeightedCELoss=2.1380 | QWK=0.7367 | MacroF1=0.5668 | Recall[class_0=0.8764, class_1=0.1841, class_2=0.7647, class_3=0.3254, class_4=0.6078]
+Epoch 18 | LR_used=0.00000163 | TrainWeightedCEMixUpLoss=0.2014 | ValCELoss=1.0015 | ValWeightedCELoss=2.2128 | QWK=0.7390 | MacroF1=0.5772 | Recall[class_0=0.8735, class_1=0.2096, class_2=0.7621, class_3=0.3730, class_4=0.5882]
+Epoch 19 | LR_used=0.00000073 | TrainWeightedCEMixUpLoss=0.1878 | ValCELoss=1.0064 | ValWeightedCELoss=2.1859 | QWK=0.7385 | MacroF1=0.5688 | Recall[class_0=0.8665, class_1=0.2096, class_2=0.7582, class_3=0.3333, class_4=0.5882]
+Epoch 20 | LR_used=0.00000018 | TrainWeightedCEMixUpLoss=0.1894 | ValCELoss=1.0054 | ValWeightedCELoss=2.2101 | QWK=0.7363 | MacroF1=0.5698 | Recall[class_0=0.8684, class_1=0.2153, class_2=0.7582, class_3=0.3333, class_4=0.5980]
+
+--------------------------------------------------------------------------------
+Training completed at   : 2026-04-24 21:24:16
+Final Val CE Loss       : 1.0054
+Final Val Weighted CE Loss: 2.2101
+Final QWK               : 0.7363
+Final Macro F1          : 0.5698
+Final Recall            : class_0=0.8684, class_1=0.2153, class_2=0.7582, class_3=0.3333, class_4=0.5980
+Loss Plot               : plots/train_val_loss_exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce.png
+Recall Plot             : plots/per_class_recall_exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce.png
+
+TOP 2 SAVED MODELS
+--------------------------------------------------------------------------------
+Rank 1: Epoch=18, QWK=0.7390, Path=models/exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce/model_epoch_018_qwk_0.7390.pth
+Rank 2: Epoch=19, QWK=0.7385, Path=models/exp_parallel_effb4_swinb384_norm_linear_wrs_mixup_wce/model_epoch_019_qwk_0.7385.pth

@@ -1,11 +1,10 @@
 # ====================================================================== #
 # python3 -m venv venv
 # source venv/bin/activate
-# pip install torch torchvision pandas scikit-learn tqdm timm numpy pillow matplotlib
+# pip install torch torchvision pandas scikit-learn tqdm timm numpy pillow matplotlib coral-pytorch
 # ====================================================================== #
 
 import os
-import glob
 import random
 import shutil
 from datetime import datetime
@@ -26,38 +25,51 @@ from sklearn.metrics import f1_score, recall_score, cohen_kappa_score
 from tqdm import tqdm
 import timm
 
+from coral_pytorch.losses import corn_loss
+from coral_pytorch.dataset import corn_label_from_logits
+
 
 # ===================== CONFIG =====================
 SEED = 3
-EXPERIMENT_TAG = "exp5_wce_mixup_alpha_0.3"
+EXPERIMENT_TAG = "exp_parallel_effb4_swinb384_corn_fusion_head"
 
-data_dir = r"/user/HS401/bs01338/Downloads/DRG Dataset 384/train"
+# Keep fixed across experiments if you want the same split
+SPLIT_TAG = "dr_fixed_split_v1"
+
+data_dir = r"/user/HS401/bs01338/Downloads/CLAHE/Train"
 excel_path = r"/user/HS401/bs01338/Downloads/DRG Dataset 384/train.csv"
 
-batch_size = 15
+# Kept unchanged
+batch_size = 14
+
 learning_rate = 3e-5
+weight_decay = 1e-4
 num_epochs = 20
 num_classes = 5
-model_name = "swin_base_patch4_window12_384"
 
-mixup_alpha = 0.3
-mixup_prob = 1.0
+efficientnet_name = "efficientnet_b4.ra2_in1k"
+swin_name = "swin_base_patch4_window12_384.ms_in22k_ft_in1k"
+model_name = "parallel_efficientnet_b4_swin_base_384"
+
+# Fusion head settings
+fusion_hidden_dim = 1024
+fusion_dropout = 0.3
+
+top_k_models = 2
+enable_grad_checkpointing = True
 
 num_workers = min(4, os.cpu_count() or 1)
 
 logs_dir = "logs"
-checkpoints_dir = "checkpoints"
 splits_dir = "splits"
 plots_dir = "plots"
 models_dir = os.path.join("models", EXPERIMENT_TAG)
 
 log_file = os.path.join(logs_dir, f"train_log_{EXPERIMENT_TAG}.txt")
 history_csv_path = os.path.join(logs_dir, f"metrics_history_{EXPERIMENT_TAG}.csv")
-checkpoint_path = os.path.join(checkpoints_dir, f"checkpoint_{EXPERIMENT_TAG}.pth")
-train_split_path = os.path.join(splits_dir, "train_split.csv")
-val_split_path = os.path.join(splits_dir, "val_split.csv")
+train_split_path = os.path.join(splits_dir, f"train_split_{SPLIT_TAG}.csv")
+val_split_path = os.path.join(splits_dir, f"val_split_{SPLIT_TAG}.csv")
 
-top_k_models = 3
 loss_plot_path = os.path.join(plots_dir, f"train_val_loss_{EXPERIMENT_TAG}.png")
 recall_plot_path = os.path.join(plots_dir, f"per_class_recall_{EXPERIMENT_TAG}.png")
 
@@ -65,7 +77,7 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp"}
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
-for d in (logs_dir, checkpoints_dir, models_dir, splits_dir, plots_dir):
+for d in (logs_dir, models_dir, splits_dir, plots_dir):
     os.makedirs(d, exist_ok=True)
 
 
@@ -83,6 +95,12 @@ def seed_worker(worker_id):
     worker_seed = torch.initial_seed() % (2**32)
     np.random.seed(worker_seed)
     random.seed(worker_seed)
+
+
+def build_torch_generator(seed=SEED):
+    g = torch.Generator()
+    g.manual_seed(seed)
+    return g
 
 
 def check_startup_paths():
@@ -103,48 +121,41 @@ def check_disk_space(path=".", min_free_gb=2.0):
 set_seed(SEED)
 
 
+# ===================== TRANSFORMS =====================
+def build_train_transform():
+    return transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2),
+        transforms.RandomAffine(degrees=0, translate=(0.05, 0.05)),
+        transforms.ToTensor(),
+        transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
+    ])
+
+
+def build_eval_transform():
+    return transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
+    ])
+
+
 # ===================== DATASET =====================
 class ImageDataset(Dataset):
-    def __init__(self, samples, transform=None):
+    def __init__(self, samples, train=False):
         self.samples = samples
-        self.transform = transform
+        self.transform = build_train_transform() if train else build_eval_transform()
 
     def __len__(self):
         return len(self.samples)
 
     def __getitem__(self, idx):
         path, label = self.samples[idx]
+
         with Image.open(path) as img:
             img = img.convert("RGB")
-        return (self.transform(img) if self.transform else img), label
 
-
-# ===================== TRANSFORMS =====================
-def build_transform(train=False):
-    ops = []
-    if train:
-        ops.extend([
-            transforms.RandomHorizontalFlip(),
-            transforms.ColorJitter(brightness=0.2, contrast=0.2),
-            transforms.RandomAffine(degrees=0, translate=(0.05, 0.05)),
-        ])
-    ops.extend([
-        transforms.ToTensor(),
-        transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
-    ])
-    return transforms.Compose(ops)
-
-
-# ===================== MIXUP =====================
-def mixup_batch(x, y, alpha=0.2):
-    if alpha <= 0 or x.size(0) < 2:
-        return x, y, y, 1.0
-
-    lam = np.random.beta(alpha, alpha)
-    index = torch.randperm(x.size(0), device=x.device)
-    mixed_x = lam * x + (1.0 - lam) * x[index]
-    y_a, y_b = y, y[index]
-    return mixed_x, y_a, y_b, float(lam)
+        img = self.transform(img)
+        return img, int(label)
 
 
 # ===================== DATA =====================
@@ -220,15 +231,7 @@ def get_samples(label_dict):
 
 
 def compute_class_stats(labels):
-    class_counts = pd.Series(labels).value_counts().reindex(range(num_classes), fill_value=0).astype(int)
-    class_weights = pd.Series(0.0, index=range(num_classes), dtype=np.float32)
-
-    nonzero = class_counts > 0
-    class_weights.loc[nonzero] = 1.0 / class_counts.loc[nonzero].astype(np.float32)
-    if nonzero.any():
-        class_weights.loc[nonzero] = class_weights.loc[nonzero] / class_weights.loc[nonzero].mean()
-
-    return class_counts, class_weights
+    return pd.Series(labels).value_counts().reindex(range(num_classes), fill_value=0).astype(int)
 
 
 def save_split_manifest(train_samples, val_samples):
@@ -282,11 +285,11 @@ def get_loaders(label_dict, device):
     train_labels = [label for _, label in train_samples]
     val_labels = [label for _, label in val_samples]
 
-    train_ds = ImageDataset(train_samples, build_transform(train=True))
-    val_ds = ImageDataset(val_samples, build_transform(train=False))
+    train_ds = ImageDataset(train_samples, train=True)
+    val_ds = ImageDataset(val_samples, train=False)
 
-    train_class_counts, class_weights = compute_class_stats(train_labels)
-    val_class_counts, _ = compute_class_stats(val_labels)
+    train_class_counts = compute_class_stats(train_labels)
+    val_class_counts = compute_class_stats(val_labels)
 
     common_kwargs = {
         "batch_size": batch_size,
@@ -297,62 +300,161 @@ def get_loaders(label_dict, device):
     if num_workers > 0:
         common_kwargs.update({"persistent_workers": True, "prefetch_factor": 2})
 
-    train_loader = DataLoader(train_ds, shuffle=True, **common_kwargs)
-    val_loader = DataLoader(val_ds, shuffle=False, **common_kwargs)
+    train_loader = DataLoader(
+        train_ds,
+        shuffle=True,
+        generator=build_torch_generator(SEED),
+        **common_kwargs,
+    )
+    val_loader = DataLoader(
+        val_ds,
+        shuffle=False,
+        **common_kwargs,
+    )
 
-    return train_loader, val_loader, class_weights, train_class_counts, val_class_counts
+    return train_loader, val_loader, train_class_counts, val_class_counts, len(train_samples)
 
 
 # ===================== MODEL =====================
+class ParallelEfficientNetSwinCORN(nn.Module):
+    def __init__(
+        self,
+        efficientnet_name,
+        swin_name,
+        num_classes,
+        fusion_hidden_dim=1024,
+        fusion_dropout=0.3,
+        pretrained=True,
+    ):
+        super().__init__()
+
+        self.efficientnet = timm.create_model(
+            efficientnet_name,
+            pretrained=pretrained,
+            num_classes=0,
+        )
+        self.swin = timm.create_model(
+            swin_name,
+            pretrained=pretrained,
+            num_classes=0,
+        )
+
+        eff_dim = getattr(self.efficientnet, "num_features", None)
+        swin_dim = getattr(self.swin, "num_features", None)
+        if eff_dim is None or swin_dim is None:
+            raise ValueError("Could not determine backbone feature dimensions from timm models.")
+
+        fusion_dim = eff_dim + swin_dim
+
+        self.fusion = nn.Sequential(
+            nn.LayerNorm(fusion_dim),
+            nn.Linear(fusion_dim, fusion_hidden_dim),
+            nn.GELU(),
+            nn.Dropout(fusion_dropout),
+            nn.Linear(fusion_hidden_dim, num_classes - 1),
+        )
+
+    @staticmethod
+    def _to_vector(feat):
+        if feat.ndim == 2:
+            return feat
+        if feat.ndim == 3:
+            return feat.mean(dim=1)
+        if feat.ndim == 4:
+            if feat.shape[1] > feat.shape[-1] and feat.shape[1] > feat.shape[-2]:
+                return feat.mean(dim=(2, 3))
+            return feat.mean(dim=(1, 2))
+        raise ValueError(f"Unexpected feature shape: {feat.shape}")
+
+    def forward(self, x):
+        eff_feat = self._to_vector(self.efficientnet(x))
+        swin_feat = self._to_vector(self.swin(x))
+        fused = torch.cat([eff_feat, swin_feat], dim=1)
+        return self.fusion(fused)
+
+
 def build_model(device):
-    model = timm.create_model(model_name, pretrained=True, num_classes=num_classes)
+    model = ParallelEfficientNetSwinCORN(
+        efficientnet_name=efficientnet_name,
+        swin_name=swin_name,
+        num_classes=num_classes,
+        fusion_hidden_dim=fusion_hidden_dim,
+        fusion_dropout=fusion_dropout,
+        pretrained=True,
+    )
+
+    if enable_grad_checkpointing:
+        if hasattr(model.efficientnet, "set_grad_checkpointing"):
+            model.efficientnet.set_grad_checkpointing(True)
+        if hasattr(model.swin, "set_grad_checkpointing"):
+            model.swin.set_grad_checkpointing(True)
+
     return model.to(device)
 
 
 # ===================== LOGGING =====================
-def initialize_log_file(log_path, class_weights, train_class_counts, val_class_counts):
+def initialize_log_file(
+    log_path,
+    train_class_counts,
+    val_class_counts,
+    num_train_samples,
+):
     with open(log_path, "w") as f:
         f.write("=" * 80 + "\n")
         f.write("TRAINING RUN LOG\n")
         f.write("=" * 80 + "\n")
         f.write(f"Run started            : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"Experiment             : {EXPERIMENT_TAG}\n")
+        f.write(f"Split tag              : {SPLIT_TAG}\n")
         f.write(f"Model                  : {model_name}\n")
+        f.write(f"Branch 1               : {efficientnet_name}\n")
+        f.write(f"Branch 2               : {swin_name}\n")
+        f.write("Fusion type            : Parallel feature fusion with MLP fusion head\n")
+        f.write(f"Fusion hidden dim      : {fusion_hidden_dim}\n")
+        f.write(f"Fusion dropout         : {fusion_dropout}\n")
+        f.write("Fusion head            : LayerNorm -> Linear -> GELU -> Dropout -> Linear(num_classes - 1)\n")
         f.write(f"Num classes            : {num_classes}\n")
         f.write(f"Batch size             : {batch_size}\n")
         f.write(f"Learning rate          : {learning_rate}\n")
+        f.write(f"Weight decay           : {weight_decay}\n")
         f.write(f"Num epochs             : {num_epochs}\n")
         f.write("Optimizer              : AdamW\n")
-        f.write("Train loss             : Weighted CrossEntropyLoss + MixUp\n")
-        f.write("Validation loss        : CrossEntropyLoss (logged) + Weighted CrossEntropyLoss (plotted)\n")
-        f.write("Imbalance handling     : Weighted CrossEntropyLoss only\n")
+        f.write("Train loss             : CORN loss\n")
+        f.write("Validation loss        : CORN loss\n")
+        f.write("MixUp                  : Disabled\n")
+        f.write("Imbalance handling     : None\n")
         f.write(f"Top model saving       : Top {top_k_models} by validation QWK\n")
-        f.write("Plots                  : Weighted CE loss curve + per-class recall curve\n")
+        f.write(f"Grad checkpointing     : {'Enabled' if enable_grad_checkpointing else 'Disabled'}\n")
+        f.write("Checkpoint saving      : Disabled\n")
+        f.write("Training resume        : Disabled\n")
+        f.write("Plots                  : CORN loss curve + per-class recall curve\n")
         f.write(f"Seed                   : {SEED}\n\n")
 
         f.write("IMPORTANT TECHNIQUES USED\n")
         f.write("-" * 80 + "\n")
-        f.write("Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(degrees=0, translate=(0.05,0.05))\n")
-        f.write("Loss function          : Weighted CrossEntropyLoss\n")
-        f.write(f"MixUp                  : Enabled (alpha={mixup_alpha}, prob={mixup_prob})\n")
-        f.write("Imbalance technique    : Class-weighted cross entropy\n")
-        f.write("Metrics                : Train weighted CE loss, Validation CE loss, Validation weighted CE loss, QWK, Macro F1, per-class recall\n\n")
+        f.write("Parallel fusion        : EfficientNet-B4 embedding + Swin-B-384 embedding -> concatenation -> fusion head\n")
+        f.write("Train augmentation     : RandomHorizontalFlip, ColorJitter(brightness=0.2, contrast=0.2), RandomAffine(translate=(0.05,0.05))\n")
+        f.write("Ordinal method         : CORN (4 logits for 5 classes)\n")
+        f.write("Train sampler          : Standard shuffled batches\n")
+        f.write(f"Train samples          : {num_train_samples}\n")
+        f.write("Loss function          : CORN loss\n")
+        f.write("Metrics                : Train CORN loss, Validation CORN loss, QWK, Macro F1, per-class recall\n\n")
 
         f.write("CLASS STATISTICS\n")
         f.write("-" * 80 + "\n")
         f.write(f"Train class counts     : {train_class_counts.to_dict()}\n")
-        f.write(f"Val class counts       : {val_class_counts.to_dict()}\n")
-        f.write(f"CE class weights       : {class_weights.round(6).to_dict()}\n\n")
+        f.write(f"Val class counts       : {val_class_counts.to_dict()}\n\n")
+
+        f.write("FILES\n")
+        f.write("-" * 80 + "\n")
+        f.write(f"Train split path       : {train_split_path}\n")
+        f.write(f"Val split path         : {val_split_path}\n")
+        f.write(f"Metrics history path   : {history_csv_path}\n")
+        f.write(f"Loss plot path         : {loss_plot_path}\n")
+        f.write(f"Recall plot path       : {recall_plot_path}\n")
+        f.write(f"Models directory       : {models_dir}\n\n")
 
         f.write("EPOCH METRICS\n")
-        f.write("-" * 80 + "\n")
-
-
-def append_resume_log(log_path, start_epoch):
-    with open(log_path, "a") as f:
-        f.write("\n")
-        f.write("-" * 80 + "\n")
-        f.write(f"Resumed training at    : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"Resuming from epoch    : {start_epoch}\n")
         f.write("-" * 80 + "\n")
 
 
@@ -362,9 +464,8 @@ def log_epoch(log_path, epoch, train_loss, metrics, lr):
         f.write(
             f"Epoch {epoch:02d} | "
             f"LR_used={lr:.8f} | "
-            f"TrainWeightedCELoss={train_loss:.4f} | "
-            f"ValCELoss={metrics['val_loss']:.4f} | "
-            f"ValWeightedCELoss={metrics['val_weighted_loss']:.4f} | "
+            f"TrainCORNLoss={train_loss:.4f} | "
+            f"ValCORNLoss={metrics['val_corn_loss']:.4f} | "
             f"QWK={metrics['qwk']:.4f} | "
             f"MacroF1={metrics['macro_f1']:.4f} | "
             f"Recall[{recall_str}]\n"
@@ -374,21 +475,22 @@ def log_epoch(log_path, epoch, train_loss, metrics, lr):
 def log_top_models_summary(log_path, top_models):
     with open(log_path, "a") as f:
         f.write("\n")
-        f.write("TOP SAVED MODELS\n")
+        f.write(f"TOP {top_k_models} SAVED MODELS\n")
         f.write("-" * 80 + "\n")
         if not top_models:
             f.write("No top models were saved.\n")
             return
-        for rank, item in enumerate(top_models, start=1):
+        for rank, item in enumerate(sort_top_models(top_models), start=1):
             f.write(
                 f"Rank {rank}: Epoch={item['epoch']}, "
-                f"QWK={item['qwk']:.4f}, Path={item['path']}\n"
+                f"QWK={item['qwk']:.4f}, "
+                f"Path={item['path']}\n"
             )
 
 
 # ===================== HISTORY / PLOTTING =====================
 def history_columns():
-    return ["epoch", "train_loss", "val_loss", "val_weighted_loss", "qwk", "macro_f1"] + [
+    return ["epoch", "train_loss", "val_corn_loss", "qwk", "macro_f1"] + [
         f"recall_class_{i}" for i in range(num_classes)
     ]
 
@@ -403,35 +505,11 @@ def reset_history_artifacts():
             os.remove(path)
 
 
-def load_history_csv_if_available():
-    if not os.path.isfile(history_csv_path):
-        return empty_history_df()
-
-    df = pd.read_csv(history_csv_path)
-    expected = set(history_columns())
-    if not expected.issubset(df.columns):
-        print("[Warning] Existing metrics_history.csv is missing columns. Starting a new history.")
-        return empty_history_df()
-
-    return df.sort_values("epoch").drop_duplicates(subset=["epoch"], keep="last").reset_index(drop=True)
-
-
-def history_from_checkpoint(history_data):
-    if not history_data:
-        return empty_history_df()
-    df = pd.DataFrame(history_data)
-    expected = set(history_columns())
-    if not expected.issubset(df.columns):
-        return empty_history_df()
-    return df.sort_values("epoch").drop_duplicates(subset=["epoch"], keep="last").reset_index(drop=True)
-
-
 def upsert_history_row(history_df, epoch, train_loss, metrics):
     row = {
         "epoch": epoch,
         "train_loss": float(train_loss),
-        "val_loss": float(metrics["val_loss"]),
-        "val_weighted_loss": float(metrics["val_weighted_loss"]),
+        "val_corn_loss": float(metrics["val_corn_loss"]),
         "qwk": float(metrics["qwk"]),
         "macro_f1": float(metrics["macro_f1"]),
     }
@@ -452,11 +530,11 @@ def plot_loss_curve(history_df):
         return
 
     plt.figure(figsize=(8, 5))
-    plt.plot(history_df["epoch"], history_df["train_loss"], marker="o", label="Train Weighted CE Loss")
-    plt.plot(history_df["epoch"], history_df["val_weighted_loss"], marker="o", label="Validation Weighted CE Loss")
+    plt.plot(history_df["epoch"], history_df["train_loss"], marker="o", label="Train CORN Loss")
+    plt.plot(history_df["epoch"], history_df["val_corn_loss"], marker="o", label="Validation CORN Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.title("Training and Validation Weighted CE Loss")
+    plt.title("Training CORN Loss vs Validation CORN Loss")
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -491,33 +569,22 @@ def update_history_and_plots(history_df, epoch, train_loss, metrics):
 
 
 # ===================== TRAIN / EVAL =====================
-def train_epoch(model, loader, optimizer, criterion, device, scaler, use_amp):
+def train_epoch(model, loader, optimizer, device, scaler, use_amp):
     model.train()
     total_loss = 0.0
 
     loop = tqdm(loader, desc="Training", leave=False)
+
     for x, y in loop:
         x = x.to(device, non_blocking=True)
         y = y.to(device, non_blocking=True)
 
         optimizer.zero_grad(set_to_none=True)
 
-        apply_mixup = (
-            mixup_alpha > 0
-            and mixup_prob > 0
-            and x.size(0) > 1
-            and random.random() < mixup_prob
-        )
+        with amp.autocast(device_type=device.type, enabled=use_amp):
+            out = model(x)
 
-        if apply_mixup:
-            mixed_x, y_a, y_b, lam = mixup_batch(x, y, alpha=mixup_alpha)
-            with amp.autocast(device_type=device.type, enabled=use_amp):
-                out = model(mixed_x)
-                loss = lam * criterion(out, y_a) + (1.0 - lam) * criterion(out, y_b)
-        else:
-            with amp.autocast(device_type=device.type, enabled=use_amp):
-                out = model(x)
-                loss = criterion(out, y)
+        loss = corn_loss(out.float(), y, num_classes=num_classes)
 
         scaler.scale(loss).backward()
         scaler.unscale_(optimizer)
@@ -531,9 +598,9 @@ def train_epoch(model, loader, optimizer, criterion, device, scaler, use_amp):
     return total_loss / max(1, len(loader))
 
 
-def evaluate(model, loader, ce_criterion, weighted_ce_criterion, device, use_amp):
+def evaluate(model, loader, device, use_amp):
     model.eval()
-    total_ce_loss, total_weighted_ce_loss = 0.0, 0.0
+    total_corn_loss = 0.0
     preds, labels = [], []
 
     with torch.no_grad():
@@ -543,20 +610,19 @@ def evaluate(model, loader, ce_criterion, weighted_ce_criterion, device, use_amp
 
             with amp.autocast(device_type=device.type, enabled=use_amp):
                 out = model(x)
-                ce_loss = ce_criterion(out, y)
-                weighted_ce_loss = weighted_ce_criterion(out, y)
 
-            total_ce_loss += ce_loss.item()
-            total_weighted_ce_loss += weighted_ce_loss.item()
-            preds.extend(torch.argmax(out, dim=1).cpu().numpy())
+            loss = corn_loss(out.float(), y, num_classes=num_classes)
+            total_corn_loss += loss.item()
+
+            batch_preds = corn_label_from_logits(out.float()).cpu().numpy()
+            preds.extend(batch_preds)
             labels.extend(y.cpu().numpy())
 
     qwk = cohen_kappa_score(labels, preds, labels=list(range(num_classes)), weights="quadratic")
     qwk = 0.0 if np.isnan(qwk) else qwk
 
     return {
-        "val_loss": total_ce_loss / max(1, len(loader)),
-        "val_weighted_loss": total_weighted_ce_loss / max(1, len(loader)),
+        "val_corn_loss": total_corn_loss / max(1, len(loader)),
         "qwk": qwk,
         "macro_f1": f1_score(labels, preds, average="macro", zero_division=0),
         "recall_per_class": recall_score(
@@ -579,23 +645,20 @@ def update_top_models(model, epoch, qwk, top_models):
     )
 
     if not qualifies:
-        return top_models, None, None
-
-    removed = None
-
-    if len(top_models) >= top_k_models:
-        removed = top_models.pop(-1)
-        if os.path.isfile(removed["path"]):
-            os.remove(removed["path"])
+        return top_models, None, []
 
     save_path = os.path.join(models_dir, f"model_epoch_{epoch:03d}_qwk_{qwk:.4f}.pth")
+    tmp_path = save_path + ".tmp"
 
     try:
-        torch.save(model.state_dict(), save_path)
+        torch.save(model.state_dict(), tmp_path)
+        os.replace(tmp_path, save_path)
     except Exception as e:
+        if os.path.isfile(tmp_path):
+            os.remove(tmp_path)
         raise RuntimeError(
             f"Failed to save model to: {save_path}\n"
-            f"This is often caused by insufficient disk space or user quota.\n"
+            f"Likely disk space / quota / write issue.\n"
             f"Original error: {e}"
         ) from e
 
@@ -606,121 +669,25 @@ def update_top_models(model, epoch, qwk, top_models):
     })
     top_models = sort_top_models(top_models)
 
-    return top_models, save_path, removed
+    removed_paths = []
+    while len(top_models) > top_k_models:
+        removed_item = top_models.pop(-1)
+        removed_path = removed_item["path"]
+        if removed_path != save_path and os.path.isfile(removed_path):
+            os.remove(removed_path)
+            removed_paths.append(removed_path)
+
+    return top_models, save_path, removed_paths
 
 
-def cleanup_stale_top_model_files(tracked_top_models):
-    tracked_paths = {item["path"] for item in tracked_top_models}
-    for path in glob.glob(os.path.join(models_dir, "*.pth")):
-        if path not in tracked_paths and os.path.isfile(path):
+def cleanup_stale_top_model_files(top_models):
+    keep_paths = {os.path.abspath(item["path"]) for item in top_models}
+    for fname in os.listdir(models_dir):
+        if not (fname.endswith(".pth") or fname.endswith(".tmp")):
+            continue
+        path = os.path.abspath(os.path.join(models_dir, fname))
+        if path not in keep_paths and os.path.isfile(path):
             os.remove(path)
-
-
-# ===================== RESUME CHECKPOINT =====================
-def save_resume_checkpoint(epoch, model, optimizer, scheduler, scaler, last_metrics, class_weights, top_models, history_df):
-    try:
-        torch.save(
-            {
-                "epoch": epoch,
-                "model_state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "scheduler_state_dict": scheduler.state_dict(),
-                "scaler_state_dict": scaler.state_dict(),
-                "final_metrics": last_metrics,
-                "class_weights": class_weights.to_dict(),
-                "model_name": model_name,
-                "num_classes": num_classes,
-                "seed": SEED,
-                "train_loss_type": "weighted_cross_entropy",
-                "mixup_alpha": mixup_alpha,
-                "mixup_prob": mixup_prob,
-                "experiment_tag": EXPERIMENT_TAG,
-                "top_models": top_models,
-                "history": history_df.to_dict(orient="records"),
-                "python_random_state": random.getstate(),
-                "numpy_random_state": np.random.get_state(),
-                "torch_random_state": torch.get_rng_state(),
-                "torch_cuda_random_state_all": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None,
-            },
-            checkpoint_path,
-        )
-    except Exception as e:
-        raise RuntimeError(
-            f"Failed to save checkpoint to: {checkpoint_path}\n"
-            f"This is often caused by insufficient disk space or user quota.\n"
-            f"Original error: {e}"
-        ) from e
-
-
-def load_checkpoint_if_available(model, optimizer, scheduler, scaler, device):
-    if not os.path.isfile(checkpoint_path):
-        return 1, None, [], empty_history_df()
-
-    checkpoint = torch.load(checkpoint_path, map_location=device)
-
-    ckpt_loss_type = checkpoint.get("train_loss_type", None)
-    if ckpt_loss_type is not None and ckpt_loss_type != "weighted_cross_entropy":
-        raise ValueError(
-            f"Checkpoint train_loss_type={ckpt_loss_type} does not match current setup=weighted_cross_entropy. "
-            f"Start a fresh experiment or use a matching checkpoint."
-        )
-
-    ckpt_mixup_alpha = checkpoint.get("mixup_alpha", None)
-    ckpt_mixup_prob = checkpoint.get("mixup_prob", None)
-    ckpt_experiment_tag = checkpoint.get("experiment_tag", None)
-
-    if ckpt_experiment_tag is not None and ckpt_experiment_tag != EXPERIMENT_TAG:
-        raise ValueError(
-            f"Checkpoint experiment_tag={ckpt_experiment_tag} does not match current experiment_tag={EXPERIMENT_TAG}. "
-            f"Start a fresh experiment or use the correct checkpoint."
-        )
-
-    if ckpt_mixup_alpha is not None and float(ckpt_mixup_alpha) != float(mixup_alpha):
-        raise ValueError(
-            f"Checkpoint mixup_alpha={ckpt_mixup_alpha} does not match current mixup_alpha={mixup_alpha}. "
-            f"Use the same MixUp settings or start a fresh experiment."
-        )
-
-    if ckpt_mixup_prob is not None and float(ckpt_mixup_prob) != float(mixup_prob):
-        raise ValueError(
-            f"Checkpoint mixup_prob={ckpt_mixup_prob} does not match current mixup_prob={mixup_prob}. "
-            f"Use the same MixUp settings or start a fresh experiment."
-        )
-
-    model.load_state_dict(checkpoint["model_state_dict"])
-    optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-    scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
-
-    if "scaler_state_dict" in checkpoint and checkpoint["scaler_state_dict"] is not None:
-        scaler.load_state_dict(checkpoint["scaler_state_dict"])
-
-    if "python_random_state" in checkpoint and checkpoint["python_random_state"] is not None:
-        random.setstate(checkpoint["python_random_state"])
-    if "numpy_random_state" in checkpoint and checkpoint["numpy_random_state"] is not None:
-        np.random.set_state(checkpoint["numpy_random_state"])
-    if "torch_random_state" in checkpoint and checkpoint["torch_random_state"] is not None:
-        torch.set_rng_state(checkpoint["torch_random_state"])
-    if (
-        torch.cuda.is_available()
-        and "torch_cuda_random_state_all" in checkpoint
-        and checkpoint["torch_cuda_random_state_all"] is not None
-    ):
-        torch.cuda.set_rng_state_all(checkpoint["torch_cuda_random_state_all"])
-
-    last_epoch = int(checkpoint.get("epoch", 0))
-    last_metrics = checkpoint.get("final_metrics", None)
-    top_models = sort_top_models(checkpoint.get("top_models", []))
-
-    history_df = history_from_checkpoint(checkpoint.get("history", []))
-    if history_df.empty:
-        history_df = load_history_csv_if_available()
-
-    start_epoch = last_epoch + 1
-
-    print(f"Found checkpoint: {checkpoint_path}")
-    print(f"Resuming from epoch {start_epoch}")
-
-    return start_epoch, last_metrics, top_models, history_df
 
 
 # ===================== MAIN =====================
@@ -735,64 +702,55 @@ def main():
     print(f"Log file: {log_file}")
 
     label_dict = load_labels(excel_path)
-    train_loader, val_loader, class_weights, train_class_counts, val_class_counts = get_loaders(label_dict, device)
-
-    class_weights_tensor = torch.tensor(class_weights.values, dtype=torch.float32, device=device)
-    train_criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
-    val_ce_criterion = nn.CrossEntropyLoss()
-    val_weighted_ce_criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
+    (
+        train_loader,
+        val_loader,
+        train_class_counts,
+        val_class_counts,
+        num_train_samples,
+    ) = get_loaders(label_dict, device)
 
     model = build_model(device)
-    optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+    optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    scaler = amp.GradScaler(device.type, enabled=use_amp)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs)
-    scaler = amp.GradScaler("cuda", enabled=use_amp)
 
-    start_epoch, last_metrics, top_models, history_df = load_checkpoint_if_available(
-        model, optimizer, scheduler, scaler, device
+    initialize_log_file(
+        log_file,
+        train_class_counts,
+        val_class_counts,
+        num_train_samples,
     )
+    reset_history_artifacts()
+    cleanup_stale_top_model_files([])
 
-    if start_epoch == 1:
-        initialize_log_file(log_file, class_weights, train_class_counts, val_class_counts)
-        cleanup_stale_top_model_files([])
-        reset_history_artifacts()
-        top_models = []
-        history_df = empty_history_df()
-    else:
-        append_resume_log(log_file, start_epoch)
-        cleanup_stale_top_model_files(top_models)
-        save_history_csv(history_df)
-        plot_loss_curve(history_df)
-        plot_recall_curve(history_df)
+    top_models = []
+    history_df = empty_history_df()
+    last_metrics = None
 
-    if start_epoch > num_epochs:
-        print(f"Checkpoint already corresponds to epoch {start_epoch - 1}, which is >= num_epochs={num_epochs}.")
-        print("No further training was run.")
-        return
-
-    for epoch in range(start_epoch, num_epochs + 1):
+    for epoch in range(1, num_epochs + 1):
         print(f"\nEpoch {epoch}/{num_epochs}")
 
-        train_loss = train_epoch(model, train_loader, optimizer, train_criterion, device, scaler, use_amp)
-        metrics = evaluate(model, val_loader, val_ce_criterion, val_weighted_ce_criterion, device, use_amp)
+        train_loss = train_epoch(model, train_loader, optimizer, device, scaler, use_amp)
+        metrics = evaluate(model, val_loader, device, use_amp)
         last_metrics = metrics
         current_lr = optimizer.param_groups[0]["lr"]
 
         print(
-            f"Train Weighted CE Loss={train_loss:.4f} | "
-            f"Val CE Loss={metrics['val_loss']:.4f} | "
-            f"Val Weighted CE Loss={metrics['val_weighted_loss']:.4f} | "
+            f"Train CORN Loss={train_loss:.4f} | "
+            f"Val CORN Loss={metrics['val_corn_loss']:.4f} | "
             f"QWK={metrics['qwk']:.4f} | "
             f"Macro F1={metrics['macro_f1']:.4f}"
         )
-        print("Per-class Recall: " + ", ".join(
-            f"class_{i}={r:.4f}" for i, r in enumerate(metrics["recall_per_class"])
-        ))
+        print(
+            "Per-class Recall: "
+            + ", ".join(f"class_{i}={r:.4f}" for i, r in enumerate(metrics["recall_per_class"]))
+        )
 
         log_epoch(log_file, epoch, train_loss, metrics, current_lr)
-
         history_df = update_history_and_plots(history_df, epoch, train_loss, metrics)
 
-        top_models, saved_path, removed_item = update_top_models(
+        top_models, saved_path, removed_paths = update_top_models(
             model=model,
             epoch=epoch,
             qwk=metrics["qwk"],
@@ -801,30 +759,17 @@ def main():
 
         if saved_path is not None:
             print(f"Saved top model: {saved_path}")
-        if removed_item is not None:
-            print(f"Removed lower-ranked model: {removed_item['path']}")
+        for removed_path in removed_paths:
+            print(f"Removed lower-ranked model: {removed_path}")
 
         scheduler.step()
-
-        save_resume_checkpoint(
-            epoch=epoch,
-            model=model,
-            optimizer=optimizer,
-            scheduler=scheduler,
-            scaler=scaler,
-            last_metrics=last_metrics,
-            class_weights=class_weights,
-            top_models=top_models,
-            history_df=history_df,
-        )
 
     with open(log_file, "a") as f:
         f.write("\n")
         f.write("-" * 80 + "\n")
         f.write(f"Training completed at   : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         if last_metrics is not None:
-            f.write(f"Final Val CE Loss       : {last_metrics['val_loss']:.4f}\n")
-            f.write(f"Final Val Weighted CE Loss: {last_metrics['val_weighted_loss']:.4f}\n")
+            f.write(f"Final Val CORN Loss     : {last_metrics['val_corn_loss']:.4f}\n")
             f.write(f"Final QWK               : {last_metrics['qwk']:.4f}\n")
             f.write(f"Final Macro F1          : {last_metrics['macro_f1']:.4f}\n")
             recall_str = ", ".join(f"class_{i}={r:.4f}" for i, r in enumerate(last_metrics["recall_per_class"]))
@@ -835,13 +780,15 @@ def main():
     log_top_models_summary(log_file, top_models)
 
     print("\nTraining complete.")
-    print(f"Top {top_k_models} model files kept in: {models_dir}")
+    if top_models:
+        print(f"Top {top_k_models} models kept in: {models_dir}")
+        for rank, item in enumerate(sort_top_models(top_models), start=1):
+            print(f"Rank {rank}: epoch={item['epoch']}, qwk={item['qwk']:.4f}, path={item['path']}")
     print(f"Train split saved to: {train_split_path}")
     print(f"Val split saved to: {val_split_path}")
     print(f"Metrics history saved to: {history_csv_path}")
     print(f"Loss plot saved to: {loss_plot_path}")
     print(f"Recall plot saved to: {recall_plot_path}")
-    print(f"Resume checkpoint saved to: {checkpoint_path}")
     if last_metrics is not None:
         print(f"Final QWK: {last_metrics['qwk']:.4f}")
     print(f"Metrics logged to: {log_file}")

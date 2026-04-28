@@ -1,0 +1,21 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp_parallel_effb4_swinb384_norm_linear_corn_BS14_LR3e-4_test
+Model                  : parallel_efficientnet_b4_swin_base_384
+Branch 1               : efficientnet_b4.ra2_in1k
+Branch 2               : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Fusion type            : Parallel feature fusion (concatenation + LayerNorm + single Linear ordinal classifier)
+Fusion head            : LayerNorm(fusion_dim) -> Linear(fusion_dim, num_classes - 1)
+Ordinal method         : CORN
+Loaded Epoch           : 4
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test CORN Loss         : 0.3633
+Accuracy               : 0.8241
+QWK                    : 0.7634
+Macro F1               : 0.5427
+Recall                 : C0=0.9688, C1=0.0847, C2=0.5630, C3=0.3817, C4=0.5943
+Confusion Matrix       : confusion_matrix_exp_parallel_effb4_swinb384_norm_linear_corn_BS14_LR3e-4_test.png

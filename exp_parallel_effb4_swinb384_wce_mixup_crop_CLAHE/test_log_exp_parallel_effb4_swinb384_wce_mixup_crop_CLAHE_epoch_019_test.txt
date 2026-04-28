@@ -1,0 +1,18 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : exp_parallel_effb4_swinb384_wce_mixup_crop_CLAHE_epoch_019_test
+Model                  : parallel_efficientnet_b4_swin_base_384
+Branch 1               : efficientnet_b4.ra2_in1k
+Branch 2               : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Loaded Epoch           : 19
+Batch Size             : 32
+
+METRICS
+--------------------------------------------------------------------------------
+Test Loss              : 0.7129
+Accuracy               : 0.8355
+QWK                    : 0.8017
+Macro F1               : 0.6035
+Recall                 : C0=0.9452, C1=0.2623, C2=0.6574, C3=0.4504, C4=0.6132
+Confusion Matrix       : confusion_matrix_exp_parallel_effb4_swinb384_wce_mixup_crop_CLAHE_epoch_019_test.png

@@ -1,0 +1,19 @@
+================================================================================
+TEST RUN LOG
+================================================================================
+Experiment             : ensemble_effb4_plus_swinb384_eff0.2_swin0.8
+Model 1                : efficientnet_b4.ra2_in1k
+Model 2                : swin_base_patch4_window12_384.ms_in22k_ft_in1k
+Loaded Epoch Model 1   : 10
+Loaded Epoch Model 2   : 14
+Batch Size             : 32
+Logit Weights          : eff=0.200, swin=0.800
+
+METRICS
+--------------------------------------------------------------------------------
+Test Loss              : 0.5813
+Accuracy               : 0.8398
+QWK                    : 0.7951
+Macro F1               : 0.6042
+Recall                 : C0=0.9556, C1=0.2514, C2=0.6436, C3=0.3817, C4=0.6792
+Confusion Matrix       : confusion_matrix_ensemble_effb4_plus_swinb384_eff0.2_swin0.8.png
