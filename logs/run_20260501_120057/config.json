@@ -1,0 +1,58 @@
+{
+  "run_ts": "20260501_120057",
+  "run_dir": "logs/run_20260501_120057",
+  "ckpt_path": "models/best_efficientnet_b5_20260501_120057.pt",
+  "seed": 42,
+  "model_name": "efficientnet_b5",
+  "task": "regression",
+  "num_classes": 5,
+  "regression_output_dim": 1,
+  "img_size": 456,
+  "batch_size": 16,
+  "accum_steps": 4,
+  "effective_batch_size": 64,
+  "num_workers": 4,
+  "num_epochs": 12,
+  "warmup_epochs": 1,
+  "warmup_start_factor": 0.25,
+  "lr": 0.0002,
+  "weight_decay": 0.0001,
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.0002,
+    "weight_decay": 0.0001
+  },
+  "scheduler": {
+    "name": "LinearLR(warmup) -> CosineAnnealingLR",
+    "warmup_epochs": 1,
+    "warmup_start_factor": 0.25,
+    "cosine_T_max": 11,
+    "eta_min": 1e-05
+  },
+  "criterion": {
+    "name": "Sample-weighted MSE (training) / MSELoss (val/test)",
+    "class_weights_formula": "(N_total / (K * N_c)) ** 0.5",
+    "class_weights": [
+      0.5217123627662659,
+      1.696207880973816,
+      1.1521648168563843,
+      2.8368051052093506,
+      3.1485402584075928
+    ],
+    "prediction_rule": "tuned ordinal thresholds (fit on val) + clip(0, NUM_CLASSES-1)"
+  },
+  "sampler": {
+    "name": "none (natural class distribution)",
+    "class_counts": [
+      18065,
+      1709,
+      3704,
+      611,
+      496
+    ]
+  },
+  "train_size": 24585,
+  "val_size": 3513,
+  "test_size": 7024,
+  "start_time": "2026-05-01T12:00:57"
+}
