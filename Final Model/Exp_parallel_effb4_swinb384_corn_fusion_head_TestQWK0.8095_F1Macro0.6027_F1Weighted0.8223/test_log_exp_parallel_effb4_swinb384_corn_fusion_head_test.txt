@@ -10,17 +10,17 @@ Fusion hidden dim      : 1024
 Fusion dropout         : 0.3
 Fusion head            : LayerNorm -> Linear -> GELU -> Dropout -> Linear(num_classes - 1)
 Ordinal method         : CORN
-Loaded Epoch           : 10
+Loaded Epoch           : 15
 Batch Size             : 32
 
 METRICS
 --------------------------------------------------------------------------------
-Test CORN Loss         : 0.4089
-Accuracy               : 0.8284
-QWK                    : 0.8095
-Micro F1               : 0.8284
-Weighted F1            : 0.8223
-Macro F1               : 0.6027
-Per-class F1           : C0=0.9246, C1=0.2937, C2=0.6441, C3=0.4682, C4=0.6829
-Recall                 : C0=0.9458, C1=0.2596, C2=0.5756, C3=0.6183, C4=0.6604
+Test CORN Loss         : 0.5679
+Accuracy               : 0.8387
+QWK                    : 0.8077
+Micro F1               : 0.8387
+Weighted F1            : 0.8307
+Macro F1               : 0.6188
+Per-class F1           : C0=0.9303, C1=0.3284, C2=0.6514, C3=0.4805, C4=0.7035
+Recall                 : C0=0.9530, C1=0.2732, C2=0.6108, C3=0.5649, C4=0.6604
 Confusion Matrix       : confusion_matrix_exp_parallel_effb4_swinb384_corn_fusion_head_test.png
