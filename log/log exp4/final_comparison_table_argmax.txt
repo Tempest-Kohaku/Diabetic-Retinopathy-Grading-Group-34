@@ -1,0 +1,14 @@
+FINAL MODEL COMPARISON TABLE - ORIGINAL ARGMAX RESULTS
+====================================================
+
+           Metric  DeiT WITHOUT Distillation  DeiT WITH Distillation
+         Accuracy                     0.7844                  0.7913
+Balanced Accuracy                     0.4441                  0.4509
+  Macro Precision                     0.5381                  0.5598
+     Macro Recall                     0.4441                  0.4509
+         Macro F1                     0.4748                  0.4863
+      Weighted F1                     0.7435                  0.7554
+              QWK                     0.6215                  0.6500
+              MCC                     0.4177                  0.4462
+      ROC-AUC OvR                     0.8072                  0.8318
+              mAP                     0.4992                  0.5232

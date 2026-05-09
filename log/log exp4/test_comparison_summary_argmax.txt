@@ -1,0 +1,16 @@
+====================================================
+FINAL TEST COMPARISON - ORIGINAL ARGMAX RESULTS
+====================================================
+
+1. DeiT WITHOUT Distillation
+QWK               : 0.6215
+Macro F1          : 0.4748
+Accuracy          : 0.7844
+Balanced Accuracy : 0.4441
+
+2. DeiT WITH Distillation
+QWK               : 0.6500
+Macro F1          : 0.4863
+Accuracy          : 0.7913
+Balanced Accuracy : 0.4509
+

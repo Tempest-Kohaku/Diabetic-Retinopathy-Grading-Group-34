@@ -1,0 +1,9 @@
+====================================================
+FINAL mAP COMPARISON
+====================================================
+
+DeiT WITHOUT Distillation
+mAP: 0.4992
+
+DeiT WITH Distillation
+mAP: 0.5232
