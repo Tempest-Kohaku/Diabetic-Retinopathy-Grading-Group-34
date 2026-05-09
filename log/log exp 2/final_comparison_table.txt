@@ -1,0 +1,14 @@
+FINAL MODEL COMPARISON TABLE
+====================================================
+
+           Metric  DeiT WITHOUT Distillation  DeiT WITH Distillation
+         Accuracy                     0.0993                  0.0400
+Balanced Accuracy                     0.2363                  0.2721
+  Macro Precision                     0.1993                  0.0287
+     Macro Recall                     0.2363                  0.2721
+         Macro F1                     0.0735                  0.0469
+      Weighted F1                     0.1366                  0.0106
+              QWK                     0.0237                  0.0192
+              MCC                     0.0325                  0.0170
+      ROC-AUC OvR                     0.6036                  0.6042
+              mAP                     0.2339                  0.2427
