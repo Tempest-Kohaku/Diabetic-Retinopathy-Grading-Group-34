@@ -1,0 +1,11 @@
+====================================================
+mAP RESULTS - DeiT WITHOUT Distillation
+====================================================
+
+No DR AP: 0.7898
+Mild AP: 0.0907
+Moderate AP: 0.1871
+Severe AP: 0.0394
+Proliferative AP: 0.0349
+
+mAP: 0.2284

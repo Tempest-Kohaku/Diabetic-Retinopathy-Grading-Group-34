@@ -1,0 +1,16 @@
+====================================================
+FINAL TEST COMPARISON
+====================================================
+
+1. DeiT WITHOUT Distillation
+QWK               : 0.0233
+Macro F1          : 0.0730
+Accuracy          : 0.0917
+Balanced Accuracy : 0.2375
+
+2. DeiT WITH Distillation
+QWK               : 0.0227
+Macro F1          : 0.0655
+Accuracy          : 0.0727
+Balanced Accuracy : 0.2740
+

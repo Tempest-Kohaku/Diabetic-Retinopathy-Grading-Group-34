@@ -1,0 +1,43 @@
+====================================================
+TEST RESULTS - DeiT WITH Distillation
+====================================================
+
+Checkpoint                : SplitDATA/checkpoints/best_distilled_deit_model.pth
+
+Accuracy                  : 0.0727
+Balanced Accuracy         : 0.2740
+Macro Precision           : 0.1899
+Macro Recall              : 0.2740
+Macro F1                  : 0.0655
+Weighted F1               : 0.0660
+Quadratic Weighted Kappa  : 0.0227
+Matthews Corrcoef         : 0.0273
+Macro ROC-AUC OvR         : 0.5980655067112636
+
+Classification Report:
+               precision    recall  f1-score   support
+
+        No DR     0.7967    0.0380    0.0725      5162
+         Mild     0.0953    0.3388    0.1487       490
+     Moderate     0.0000    0.0000    0.0000      1059
+       Severe     0.0269    0.2102    0.0477       176
+Proliferative     0.0305    0.7832    0.0588       143
+
+     accuracy                         0.0727      7030
+    macro avg     0.1899    0.2740    0.0655      7030
+ weighted avg     0.5930    0.0727    0.0660      7030
+
+
+Confusion Matrix:
+[[ 196 1306    0 1023 2637]
+ [  23  166    0   95  206]
+ [  21  223    0  208  607]
+ [   2   31    0   37  106]
+ [   4   16    0   11  112]]
+
+Class-wise Sensitivity / Specificity:
+No DR           | Sensitivity: 0.0380 | Specificity: 0.9732
+Mild            | Sensitivity: 0.3388 | Specificity: 0.7590
+Moderate        | Sensitivity: 0.0000 | Specificity: 1.0000
+Severe          | Sensitivity: 0.2102 | Specificity: 0.8049
+Proliferative   | Sensitivity: 0.7832 | Specificity: 0.4837
