@@ -4,14 +4,14 @@ FINAL TEST COMPARISON
 
 1. DeiT WITHOUT Distillation
 Argmax QWK               : 0.6488
-Tuned QWK                : 0.6911
+Tuned QWK                : 0.6887
 Macro F1                 : 0.4857
 Accuracy                 : 0.7869
 Balanced Accuracy        : 0.4545
 
 2. DeiT WITH Distillation
 Argmax QWK               : 0.6598
-Tuned QWK                : 0.7121
+Tuned QWK                : 0.7030
 Macro F1                 : 0.4926
 Accuracy                 : 0.7928
 Balanced Accuracy        : 0.4660
