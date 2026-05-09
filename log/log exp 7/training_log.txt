@@ -1,0 +1,218 @@
+=========================================================
+Diabetic Retinopathy DeiT Distillation Training Log
+=========================================================
+
+Model: deit_small_distilled_patch16_224
+Image Size: 224
+Batch Size: 16
+Learning Rate: 5e-05
+Epochs: 12
+Patience: 8
+Temperature TAU: 2.0
+Distillation Alpha: 0.2
+
+=========================================================
+EPOCH RESULTS
+=========================================================
+
+=========================================================
+Epoch 01/12
+=========================================================
+Train Loss           : 0.7794
+Train Accuracy       : 75.44%
+Train Macro-F1       : 0.3175
+
+Validation Loss      : 0.7525
+Validation Accuracy  : 76.05%
+Validation Bal Acc   : 0.3104
+Validation Macro-F1  : 0.3187
+Validation QWK       : 0.4078
+
+BEST MODEL SAVED
+Validation QWK      : 0.4078
+Validation Macro-F1 : 0.3187
+
+=========================================================
+Epoch 02/12
+=========================================================
+Train Loss           : 0.7188
+Train Accuracy       : 77.02%
+Train Macro-F1       : 0.3928
+
+Validation Loss      : 0.7090
+Validation Accuracy  : 76.87%
+Validation Bal Acc   : 0.3627
+Validation Macro-F1  : 0.4042
+Validation QWK       : 0.4907
+
+BEST MODEL SAVED
+Validation QWK      : 0.4907
+Validation Macro-F1 : 0.4042
+
+=========================================================
+Epoch 03/12
+=========================================================
+Train Loss           : 0.6950
+Train Accuracy       : 77.87%
+Train Macro-F1       : 0.4238
+
+Validation Loss      : 0.6916
+Validation Accuracy  : 77.83%
+Validation Bal Acc   : 0.3767
+Validation Macro-F1  : 0.4169
+Validation QWK       : 0.5330
+
+BEST MODEL SAVED
+Validation QWK      : 0.5330
+Validation Macro-F1 : 0.4169
+
+=========================================================
+Epoch 04/12
+=========================================================
+Train Loss           : 0.6695
+Train Accuracy       : 78.67%
+Train Macro-F1       : 0.4463
+
+Validation Loss      : 0.6801
+Validation Accuracy  : 77.95%
+Validation Bal Acc   : 0.3608
+Validation Macro-F1  : 0.4062
+Validation QWK       : 0.5213
+
+No QWK improvement. Patience Counter: 1/8
+
+=========================================================
+Epoch 05/12
+=========================================================
+Train Loss           : 0.6474
+Train Accuracy       : 79.55%
+Train Macro-F1       : 0.4780
+
+Validation Loss      : 0.6740
+Validation Accuracy  : 78.34%
+Validation Bal Acc   : 0.4101
+Validation Macro-F1  : 0.4552
+Validation QWK       : 0.5845
+
+BEST MODEL SAVED
+Validation QWK      : 0.5845
+Validation Macro-F1 : 0.4552
+
+=========================================================
+Epoch 06/12
+=========================================================
+Train Loss           : 0.6291
+Train Accuracy       : 80.23%
+Train Macro-F1       : 0.4977
+
+Validation Loss      : 0.6632
+Validation Accuracy  : 78.89%
+Validation Bal Acc   : 0.4355
+Validation Macro-F1  : 0.4748
+Validation QWK       : 0.6038
+
+BEST MODEL SAVED
+Validation QWK      : 0.6038
+Validation Macro-F1 : 0.4748
+
+=========================================================
+Epoch 07/12
+=========================================================
+Train Loss           : 0.5997
+Train Accuracy       : 81.31%
+Train Macro-F1       : 0.5281
+
+Validation Loss      : 0.6800
+Validation Accuracy  : 78.92%
+Validation Bal Acc   : 0.4271
+Validation Macro-F1  : 0.4586
+Validation QWK       : 0.5934
+
+No QWK improvement. Patience Counter: 1/8
+
+=========================================================
+Epoch 08/12
+=========================================================
+Train Loss           : 0.5818
+Train Accuracy       : 82.04%
+Train Macro-F1       : 0.5546
+
+Validation Loss      : 0.6670
+Validation Accuracy  : 78.88%
+Validation Bal Acc   : 0.4444
+Validation Macro-F1  : 0.4716
+Validation QWK       : 0.6188
+
+BEST MODEL SAVED
+Validation QWK      : 0.6188
+Validation Macro-F1 : 0.4716
+
+=========================================================
+Epoch 09/12
+=========================================================
+Train Loss           : 0.5576
+Train Accuracy       : 83.00%
+Train Macro-F1       : 0.5886
+
+Validation Loss      : 0.6636
+Validation Accuracy  : 79.25%
+Validation Bal Acc   : 0.4207
+Validation Macro-F1  : 0.4668
+Validation QWK       : 0.6104
+
+No QWK improvement. Patience Counter: 1/8
+
+=========================================================
+Epoch 10/12
+=========================================================
+Train Loss           : 0.5355
+Train Accuracy       : 83.86%
+Train Macro-F1       : 0.6157
+
+Validation Loss      : 0.6647
+Validation Accuracy  : 79.42%
+Validation Bal Acc   : 0.4336
+Validation Macro-F1  : 0.4732
+Validation QWK       : 0.6255
+
+BEST MODEL SAVED
+Validation QWK      : 0.6255
+Validation Macro-F1 : 0.4732
+
+=========================================================
+Epoch 11/12
+=========================================================
+Train Loss           : 0.5210
+Train Accuracy       : 84.63%
+Train Macro-F1       : 0.6337
+
+Validation Loss      : 0.6656
+Validation Accuracy  : 79.09%
+Validation Bal Acc   : 0.4520
+Validation Macro-F1  : 0.4839
+Validation QWK       : 0.6417
+
+BEST MODEL SAVED
+Validation QWK      : 0.6417
+Validation Macro-F1 : 0.4839
+
+=========================================================
+Epoch 12/12
+=========================================================
+Train Loss           : 0.5106
+Train Accuracy       : 84.90%
+Train Macro-F1       : 0.6406
+
+Validation Loss      : 0.6731
+Validation Accuracy  : 79.25%
+Validation Bal Acc   : 0.4394
+Validation Macro-F1  : 0.4785
+Validation QWK       : 0.6353
+
+No QWK improvement. Patience Counter: 1/8
+
+=========================================================
+TRAINING COMPLETE
+=========================================================
+Best Validation QWK      : 0.6417
+Best Validation Macro-F1 : 0.4839
