@@ -1,0 +1,142 @@
+=====================================================
+DeiT WITHOUT Distillation Training Log
+=====================================================
+
+Model: deit_small_patch16_224
+Teacher Used: No
+Loss: CrossEntropy only
+
+
+Epoch 01/12
+Train Loss          : 0.9660
+Train Accuracy      : 74.52%
+Train Macro-F1      : 0.2623
+Validation Loss     : 0.9496
+Validation Accuracy : 75.01%
+Validation Bal Acc  : 0.2411
+Validation Macro-F1 : 0.2446
+Validation QWK      : 0.2086
+
+Best no-distillation DeiT saved | Val QWK: 0.2086
+
+Epoch 02/12
+Train Loss          : 0.9128
+Train Accuracy      : 76.29%
+Train Macro-F1      : 0.3535
+Validation Loss     : 0.9131
+Validation Accuracy : 75.68%
+Validation Bal Acc  : 0.3263
+Validation Macro-F1 : 0.3511
+Validation QWK      : 0.4328
+
+Best no-distillation DeiT saved | Val QWK: 0.4328
+
+Epoch 03/12
+Train Loss          : 0.8874
+Train Accuracy      : 77.53%
+Train Macro-F1      : 0.4001
+Validation Loss     : 0.8927
+Validation Accuracy : 76.99%
+Validation Bal Acc  : 0.3753
+Validation Macro-F1 : 0.4089
+Validation QWK      : 0.5156
+
+Best no-distillation DeiT saved | Val QWK: 0.5156
+
+Epoch 04/12
+Train Loss          : 0.8701
+Train Accuracy      : 77.93%
+Train Macro-F1      : 0.4347
+Validation Loss     : 0.9061
+Validation Accuracy : 76.91%
+Validation Bal Acc  : 0.3410
+Validation Macro-F1 : 0.3755
+Validation QWK      : 0.4551
+
+Epoch 05/12
+Train Loss          : 0.8494
+Train Accuracy      : 78.86%
+Train Macro-F1      : 0.4595
+Validation Loss     : 0.8779
+Validation Accuracy : 77.78%
+Validation Bal Acc  : 0.3874
+Validation Macro-F1 : 0.4285
+Validation QWK      : 0.5311
+
+Best no-distillation DeiT saved | Val QWK: 0.5311
+
+Epoch 06/12
+Train Loss          : 0.8197
+Train Accuracy      : 80.18%
+Train Macro-F1      : 0.5007
+Validation Loss     : 0.8818
+Validation Accuracy : 77.91%
+Validation Bal Acc  : 0.4295
+Validation Macro-F1 : 0.4501
+Validation QWK      : 0.5546
+
+Best no-distillation DeiT saved | Val QWK: 0.5546
+
+Epoch 07/12
+Train Loss          : 0.7858
+Train Accuracy      : 81.65%
+Train Macro-F1      : 0.5517
+Validation Loss     : 0.8924
+Validation Accuracy : 77.54%
+Validation Bal Acc  : 0.3970
+Validation Macro-F1 : 0.4311
+Validation QWK      : 0.5730
+
+Best no-distillation DeiT saved | Val QWK: 0.5730
+
+Epoch 08/12
+Train Loss          : 0.7507
+Train Accuracy      : 83.21%
+Train Macro-F1      : 0.6094
+Validation Loss     : 0.9039
+Validation Accuracy : 77.92%
+Validation Bal Acc  : 0.4126
+Validation Macro-F1 : 0.4488
+Validation QWK      : 0.5643
+
+Epoch 09/12
+Train Loss          : 0.7016
+Train Accuracy      : 85.47%
+Train Macro-F1      : 0.6754
+Validation Loss     : 0.9042
+Validation Accuracy : 77.68%
+Validation Bal Acc  : 0.4470
+Validation Macro-F1 : 0.4754
+Validation QWK      : 0.6001
+
+Best no-distillation DeiT saved | Val QWK: 0.6001
+
+Epoch 10/12
+Train Loss          : 0.6573
+Train Accuracy      : 87.58%
+Train Macro-F1      : 0.7423
+Validation Loss     : 0.9313
+Validation Accuracy : 77.00%
+Validation Bal Acc  : 0.4408
+Validation Macro-F1 : 0.4719
+Validation QWK      : 0.5827
+
+Epoch 11/12
+Train Loss          : 0.6190
+Train Accuracy      : 89.36%
+Train Macro-F1      : 0.7857
+Validation Loss     : 0.9499
+Validation Accuracy : 76.72%
+Validation Bal Acc  : 0.4422
+Validation Macro-F1 : 0.4745
+Validation QWK      : 0.5880
+
+Epoch 12/12
+Train Loss          : 0.6047
+Train Accuracy      : 90.37%
+Train Macro-F1      : 0.8144
+Validation Loss     : 0.9517
+Validation Accuracy : 76.63%
+Validation Bal Acc  : 0.4395
+Validation Macro-F1 : 0.4751
+Validation QWK      : 0.5834
