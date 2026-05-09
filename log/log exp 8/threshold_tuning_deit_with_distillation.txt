@@ -1,0 +1,15 @@
+
+====================================================
+THRESHOLD TUNING RESULTS - DeiT WITH Distillation
+====================================================
+Best thresholds             : [0.95081463 1.6173777  1.88088218 2.8933592 ]
+
+Tuned Validation QWK        : 0.6411
+Tuned Validation Macro F1   : 0.3912
+Tuned Validation Accuracy   : 0.6867
+Tuned Validation Bal Acc    : 0.4329
+
+Tuned Test QWK              : 0.6616
+Tuned Test Macro F1         : 0.4115
+Tuned Test Accuracy         : 0.6957
+Tuned Test Bal Accuracy     : 0.4537

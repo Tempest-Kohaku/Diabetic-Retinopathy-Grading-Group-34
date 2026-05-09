@@ -1,0 +1,5 @@
+Metric,DeiT WITHOUT Distillation,DeiT WITH Distillation
+Tuned Test QWK,0.6598,0.6616
+Tuned Test Macro F1,0.3657,0.4115
+Tuned Test Accuracy,0.6958,0.6957
+Tuned Test Balanced Accuracy,0.4009,0.4537

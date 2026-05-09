@@ -1,0 +1,199 @@
+====================================================
+Teacher Training Log - RegNetY-160
+====================================================
+
+Teacher Model: regnety_160
+Epochs: 12
+Loss: FocalLoss(gamma=2.0, label_smoothing=0.05)
+Optimizer: AdamW
+Learning Rate: 5e-5
+Weight Decay: 0.05
+
+
+====================================================
+Teacher Epoch 1/12
+====================================================
+Train Loss          : 0.6822
+Train Accuracy      : 47.59%
+Train Macro-F1      : 0.4736
+
+Val Loss            : 0.5629
+Val Accuracy        : 66.45%
+Val Balanced Acc    : 0.4996
+Val Macro-F1        : 0.4127
+Val QWK             : 0.4569
+
+Best teacher saved
+Best Val QWK      : 0.4569
+Val Macro-F1      : 0.4127
+
+====================================================
+Teacher Epoch 2/12
+====================================================
+Train Loss          : 0.4702
+Train Accuracy      : 61.53%
+Train Macro-F1      : 0.6150
+
+Val Loss            : 0.4861
+Val Accuracy        : 59.85%
+Val Balanced Acc    : 0.4869
+Val Macro-F1        : 0.4547
+Val QWK             : 0.5556
+
+Best teacher saved
+Best Val QWK      : 0.5556
+Val Macro-F1      : 0.4547
+
+====================================================
+Teacher Epoch 3/12
+====================================================
+Train Loss          : 0.3593
+Train Accuracy      : 70.25%
+Train Macro-F1      : 0.7009
+
+Val Loss            : 0.4671
+Val Accuracy        : 64.84%
+Val Balanced Acc    : 0.4754
+Val Macro-F1        : 0.4383
+Val QWK             : 0.5854
+
+Best teacher saved
+Best Val QWK      : 0.5854
+Val Macro-F1      : 0.4383
+
+====================================================
+Teacher Epoch 4/12
+====================================================
+Train Loss          : 0.2886
+Train Accuracy      : 75.65%
+Train Macro-F1      : 0.7553
+
+Val Loss            : 0.5611
+Val Accuracy        : 51.15%
+Val Balanced Acc    : 0.4783
+Val Macro-F1        : 0.4346
+Val QWK             : 0.4980
+
+====================================================
+Teacher Epoch 5/12
+====================================================
+Train Loss          : 0.2371
+Train Accuracy      : 80.68%
+Train Macro-F1      : 0.8069
+
+Val Loss            : 0.5042
+Val Accuracy        : 60.30%
+Val Balanced Acc    : 0.4927
+Val Macro-F1        : 0.4468
+Val QWK             : 0.5427
+
+====================================================
+Teacher Epoch 6/12
+====================================================
+Train Loss          : 0.1960
+Train Accuracy      : 83.98%
+Train Macro-F1      : 0.8410
+
+Val Loss            : 0.4636
+Val Accuracy        : 68.65%
+Val Balanced Acc    : 0.4972
+Val Macro-F1        : 0.4743
+Val QWK             : 0.5977
+
+Best teacher saved
+Best Val QWK      : 0.5977
+Val Macro-F1      : 0.4743
+
+====================================================
+Teacher Epoch 7/12
+====================================================
+Train Loss          : 0.1522
+Train Accuracy      : 87.88%
+Train Macro-F1      : 0.8776
+
+Val Loss            : 0.5288
+Val Accuracy        : 60.87%
+Val Balanced Acc    : 0.4844
+Val Macro-F1        : 0.4748
+Val QWK             : 0.5423
+
+====================================================
+Teacher Epoch 8/12
+====================================================
+Train Loss          : 0.1198
+Train Accuracy      : 90.80%
+Train Macro-F1      : 0.9090
+
+Val Loss            : 0.5507
+Val Accuracy        : 66.03%
+Val Balanced Acc    : 0.4730
+Val Macro-F1        : 0.4718
+Val QWK             : 0.5607
+
+====================================================
+Teacher Epoch 9/12
+====================================================
+Train Loss          : 0.0886
+Train Accuracy      : 93.46%
+Train Macro-F1      : 0.9351
+
+Val Loss            : 0.5321
+Val Accuracy        : 69.98%
+Val Balanced Acc    : 0.4493
+Val Macro-F1        : 0.4714
+Val QWK             : 0.5877
+
+====================================================
+Teacher Epoch 10/12
+====================================================
+Train Loss          : 0.0677
+Train Accuracy      : 95.45%
+Train Macro-F1      : 0.9545
+
+Val Loss            : 0.5379
+Val Accuracy        : 72.39%
+Val Balanced Acc    : 0.4714
+Val Macro-F1        : 0.4861
+Val QWK             : 0.6129
+
+Best teacher saved
+Best Val QWK      : 0.6129
+Val Macro-F1      : 0.4861
+
+====================================================
+Teacher Epoch 11/12
+====================================================
+Train Loss          : 0.0558
+Train Accuracy      : 96.46%
+Train Macro-F1      : 0.9643
+
+Val Loss            : 0.5594
+Val Accuracy        : 74.00%
+Val Balanced Acc    : 0.4661
+Val Macro-F1        : 0.4931
+Val QWK             : 0.6323
+
+Best teacher saved
+Best Val QWK      : 0.6323
+Val Macro-F1      : 0.4931
+
+====================================================
+Teacher Epoch 12/12
+====================================================
+Train Loss          : 0.0493
+Train Accuracy      : 97.00%
+Train Macro-F1      : 0.9699
+
+Val Loss            : 0.5615
+Val Accuracy        : 75.65%
+Val Balanced Acc    : 0.4746
+Val Macro-F1        : 0.5010
+Val QWK             : 0.6450
+
+Best teacher saved
+Best Val QWK      : 0.6450
+Val Macro-F1      : 0.5010
+
+Teacher ready
+Best Val QWK      : 0.6450
+Best Val Macro-F1 : 0.5010

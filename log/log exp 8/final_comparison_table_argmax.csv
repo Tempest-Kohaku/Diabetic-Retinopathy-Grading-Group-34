@@ -1,0 +1,11 @@
+Metric,DeiT WITHOUT Distillation,DeiT WITH Distillation
+Accuracy,0.7163,0.6625
+Balanced Accuracy,0.4219,0.4574
+Macro Precision,0.5065,0.4906
+Macro Recall,0.4219,0.4574
+Macro F1,0.4514,0.4648
+Weighted F1,0.7155,0.6874
+QWK,0.583,0.57
+MCC,0.334,0.3104
+ROC-AUC OvR,0.7457,0.7439
+mAP,0.44,0.4439
