@@ -1,0 +1,190 @@
+Free disk space: 5.03 GB
+
+================ FILE MATCHING ================
+CSV entries        : 29857
+Matched images     : 29857
+Missing images     : 0
+==============================================
+
+Created and saved new train/validation split files.
+Loading pretrained weights from Hugging Face hub (timm/efficientnet_b4.ra2_in1k)
+HTTP Request: HEAD https://huggingface.co/timm/efficientnet_b4.ra2_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[timm/efficientnet_b4.ra2_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+Loading pretrained weights from Hugging Face hub (timm/swin_base_patch4_window12_384.ms_in22k_ft_in1k)
+HTTP Request: HEAD https://huggingface.co/timm/swin_base_patch4_window12_384.ms_in22k_ft_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[timm/swin_base_patch4_window12_384.ms_in22k_ft_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+================================================================================
+TRAINING RUN
+================================================================================
+Started: 2026-05-10 13:27:31
+Device: cuda
+Experiment: exp_parallel_effb4_swinb384_corn_fusion_head
+Save format: both
+Train samples: 24781
+Val samples: 5076
+Train class counts: {0: 18208, 1: 1724, 2: 3733, 3: 616, 4: 500}
+Val class counts: {0: 3730, 1: 353, 2: 765, 3: 126, 4: 102}
+--------------------------------------------------------------------------------
+CONFIG
+seed: 3
+experiment_tag: exp_parallel_effb4_swinb384_corn_fusion_head
+split_tag: dr_fixed_split_v1
+data_dir: /user/HS401/bs01338/Downloads/CLAHE/Train
+csv_path: /user/HS401/bs01338/Downloads/DRG Dataset 384/train.csv
+image_col: image
+label_col: level
+num_classes: 5
+batch_size: 14
+num_epochs: 20
+learning_rate: 3e-05
+weight_decay: 0.0001
+val_size: 0.17
+efficientnet_name: efficientnet_b4.ra2_in1k
+swin_name: swin_base_patch4_window12_384.ms_in22k_ft_in1k
+pretrained: True
+fusion_hidden_dim: 1024
+fusion_dropout: 0.3
+random_erasing_p: 0.25
+random_erasing_scale: (0.02, 0.1)
+random_erasing_ratio: (0.3, 3.3)
+random_erasing_value: random
+top_k_models: 2
+grad_clip: 1.0
+enable_grad_checkpointing: True
+num_workers: 4
+output_dir: outputs
+save_format: both
+save_full_pth_checkpoint: True
+image_size: 384
+id2label: {0: 'No DR', 1: 'Mild', 2: 'Moderate', 3: 'Severe', 4: 'Proliferative DR'}
+================================================================================
+
+Epoch 1/20
+Learning rate: 0.00003000
+Train Loss=0.4105 | Val Loss=0.3501 | QWK=0.7589 | Macro F1=0.5010
+Recall: class_0=0.9700, class_1=0.0425, class_2=0.6275, class_3=0.2778, class_4=0.5000
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_001_qwk_0.7589.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_001_qwk_0.7589_hf
+
+Epoch 2/20
+Learning rate: 0.00002982
+Train Loss=0.3440 | Val Loss=0.3324 | QWK=0.7815 | Macro F1=0.5794
+Recall: class_0=0.9858, class_1=0.1530, class_2=0.5150, class_3=0.5317, class_4=0.5196
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_002_qwk_0.7815.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_002_qwk_0.7815_hf
+
+Epoch 3/20
+Learning rate: 0.00002927
+Train Loss=0.3203 | Val Loss=0.3146 | QWK=0.7945 | Macro F1=0.5897
+Recall: class_0=0.9635, class_1=0.1955, class_2=0.6797, class_3=0.3889, class_4=0.4902
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_003_qwk_0.7945.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_003_qwk_0.7945_hf
+
+Epoch 4/20
+Learning rate: 0.00002837
+Train Loss=0.3008 | Val Loss=0.3283 | QWK=0.8052 | Macro F1=0.5997
+Recall: class_0=0.9354, class_1=0.1756, class_2=0.6915, class_3=0.5397, class_4=0.6275
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_004_qwk_0.8052.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_004_qwk_0.8052_hf
+
+Epoch 5/20
+Learning rate: 0.00002714
+Train Loss=0.2781 | Val Loss=0.3372 | QWK=0.8078 | Macro F1=0.6046
+Recall: class_0=0.9611, class_1=0.1813, class_2=0.6732, class_3=0.4841, class_4=0.6373
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_005_qwk_0.8078.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_005_qwk_0.8078_hf
+
+Epoch 6/20
+Learning rate: 0.00002561
+Train Loss=0.2515 | Val Loss=0.3418 | QWK=0.7815 | Macro F1=0.5800
+Recall: class_0=0.9676, class_1=0.1501, class_2=0.6601, class_3=0.2857, class_4=0.6373
+
+Epoch 7/20
+Learning rate: 0.00002382
+Train Loss=0.2293 | Val Loss=0.3417 | QWK=0.8065 | Macro F1=0.6100
+Recall: class_0=0.9587, class_1=0.2238, class_2=0.7085, class_3=0.3254, class_4=0.6275
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_007_qwk_0.8065.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_007_qwk_0.8065_hf
+
+Epoch 8/20
+Learning rate: 0.00002181
+Train Loss=0.2084 | Val Loss=0.3563 | QWK=0.8040 | Macro F1=0.5941
+Recall: class_0=0.9603, class_1=0.1756, class_2=0.6941, class_3=0.3413, class_4=0.6373
+
+Epoch 9/20
+Learning rate: 0.00001964
+Train Loss=0.1843 | Val Loss=0.3728 | QWK=0.8089 | Macro F1=0.6103
+Recall: class_0=0.9606, class_1=0.2040, class_2=0.6549, class_3=0.4444, class_4=0.6569
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_009_qwk_0.8089.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_009_qwk_0.8089_hf
+
+Epoch 10/20
+Learning rate: 0.00001735
+Train Loss=0.1650 | Val Loss=0.4272 | QWK=0.8099 | Macro F1=0.6089
+Recall: class_0=0.9416, class_1=0.2436, class_2=0.6065, class_3=0.6190, class_4=0.6667
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_010_qwk_0.8099.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_010_qwk_0.8099_hf
+
+Epoch 11/20
+Learning rate: 0.00001500
+Train Loss=0.1451 | Val Loss=0.4328 | QWK=0.8121 | Macro F1=0.6213
+Recall: class_0=0.9700, class_1=0.2380, class_2=0.6418, class_3=0.5556, class_4=0.5882
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_011_qwk_0.8121.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_011_qwk_0.8121_hf
+
+Epoch 12/20
+Learning rate: 0.00001265
+Train Loss=0.1280 | Val Loss=0.4524 | QWK=0.8085 | Macro F1=0.6314
+Recall: class_0=0.9576, class_1=0.2691, class_2=0.6248, class_3=0.5556, class_4=0.6078
+
+Epoch 13/20
+Learning rate: 0.00001036
+Train Loss=0.1149 | Val Loss=0.5052 | QWK=0.8084 | Macro F1=0.6300
+Recall: class_0=0.9558, class_1=0.2578, class_2=0.6248, class_3=0.5794, class_4=0.6471
+
+Epoch 14/20
+Learning rate: 0.00000819
+Train Loss=0.1000 | Val Loss=0.5301 | QWK=0.8084 | Macro F1=0.6184
+Recall: class_0=0.9609, class_1=0.2720, class_2=0.6641, class_3=0.3889, class_4=0.6275
+
+Epoch 15/20
+Learning rate: 0.00000618
+Train Loss=0.0859 | Val Loss=0.5623 | QWK=0.8122 | Macro F1=0.6191
+Recall: class_0=0.9582, class_1=0.2380, class_2=0.6288, class_3=0.5714, class_4=0.6765
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_015_qwk_0.8122.pth
+Saved top model artifact: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_015_qwk_0.8122_hf
+
+Epoch 16/20
+Learning rate: 0.00000439
+Train Loss=0.0794 | Val Loss=0.5707 | QWK=0.8116 | Macro F1=0.6354
+Recall: class_0=0.9563, class_1=0.2578, class_2=0.6719, class_3=0.5079, class_4=0.6667
+
+Epoch 17/20
+Learning rate: 0.00000286
+Train Loss=0.0718 | Val Loss=0.6011 | QWK=0.7976 | Macro F1=0.6195
+Recall: class_0=0.9193, class_1=0.2776, class_2=0.7007, class_3=0.4921, class_4=0.6275
+
+Epoch 18/20
+Learning rate: 0.00000163
+Train Loss=0.0673 | Val Loss=0.6012 | QWK=0.8024 | Macro F1=0.6219
+Recall: class_0=0.9509, class_1=0.2521, class_2=0.6497, class_3=0.5556, class_4=0.6275
+
+Epoch 19/20
+Learning rate: 0.00000073
+Train Loss=0.0657 | Val Loss=0.6178 | QWK=0.8006 | Macro F1=0.6142
+Recall: class_0=0.9480, class_1=0.2323, class_2=0.6941, class_3=0.4286, class_4=0.6373
+
+Epoch 20/20
+Learning rate: 0.00000018
+Train Loss=0.0601 | Val Loss=0.6099 | QWK=0.8096 | Macro F1=0.6250
+Recall: class_0=0.9515, class_1=0.2578, class_2=0.6601, class_3=0.5238, class_4=0.6569
+
+Training complete.
+Best validation QWK: 0.8122
+Metrics saved to: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/logs/metrics_history.csv
+Loss plot saved to: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/plots/train_val_loss.png
+Recall plot saved to: outputs/exp_parallel_effb4_swinb384_corn_fusion_head/plots/per_class_recall.png
+
+Top saved models:
+Rank 1: Epoch=15, QWK=0.8122, Artifacts=outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_015_qwk_0.8122.pth, outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_015_qwk_0.8122_hf
+Rank 2: Epoch=11, QWK=0.8121, Artifacts=outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_011_qwk_0.8121.pth, outputs/exp_parallel_effb4_swinb384_corn_fusion_head/models/model_epoch_011_qwk_0.8121_hf

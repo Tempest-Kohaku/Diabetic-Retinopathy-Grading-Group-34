@@ -1,0 +1,45 @@
+================================================================================
+TEST RUN CONFIG
+================================================================================
+experiment_name: exp_parallel_effb4_swinb384_corn_fusion_head_test2
+model_path: /user/HS401/bs01338/Downloads/DRG/Diabetic-Retinopathy-Grading-Group-34/models/exp_parallel_effb4_swinb384_corn_fusion_head/model_epoch_015_qwk_0.8122.pth
+test_dir: /user/HS401/bs01338/Downloads/CLAHE/Test
+csv_path: /user/HS401/bs01338/Downloads/DRG Dataset 384/test.csv
+image_col_options: ('image', 'filename')
+label_col_options: ('level', 'class')
+batch_size: 32
+num_classes: 5
+num_workers: 4
+efficientnet_name: efficientnet_b4.ra2_in1k
+swin_name: swin_base_patch4_window12_384.ms_in22k_ft_in1k
+fusion_hidden_dim: 1024
+fusion_dropout: 0.3
+output_dir: test_outputs
+================================================================================
+Using device: cuda
+Loading model from: /user/HS401/bs01338/Downloads/DRG/Diabetic-Retinopathy-Grading-Group-34/models/exp_parallel_effb4_swinb384_corn_fusion_head/model_epoch_015_qwk_0.8122.pth
+
+================ TEST FILE MATCHING ================
+CSV entries        : 5269
+Matched images     : 5269
+Missing images     : 0
+====================================================
+
+
+================ TEST RESULTS ================
+Experiment      : exp_parallel_effb4_swinb384_corn_fusion_head_test2
+Loaded epoch    : 15
+Test CORN Loss  : 0.5679
+Accuracy        : 0.8387
+QWK             : 0.8077
+Micro F1        : 0.8387
+Weighted F1     : 0.8307
+Macro F1        : 0.6188
+Per-class F1    : C0=0.9303, C1=0.3284, C2=0.6514, C3=0.4805, C4=0.7035
+Per-class Recall: C0=0.9530, C1=0.2732, C2=0.6108, C3=0.5649, C4=0.6604
+==============================================
+
+Metrics CSV saved to      : test_outputs/exp_parallel_effb4_swinb384_corn_fusion_head_test2/test_metrics.csv
+Predictions CSV saved to  : test_outputs/exp_parallel_effb4_swinb384_corn_fusion_head_test2/test_predictions.csv
+Confusion matrix saved to : test_outputs/exp_parallel_effb4_swinb384_corn_fusion_head_test2/confusion_matrix.png
+Test log saved to         : test_outputs/exp_parallel_effb4_swinb384_corn_fusion_head_test2/test.log
