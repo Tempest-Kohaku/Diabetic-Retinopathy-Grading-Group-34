@@ -1,0 +1,12 @@
+{
+  "run_ts": "20260502_113025",
+  "run_dir": "logs/run_20260502_113025",
+  "ckpt_path": "models/best_efficientnet_b5_20260501_082822.pt",
+  "kind": "eval-only: threshold tuning applied to existing checkpoint, no retraining",
+  "num_classes": 5,
+  "img_size": 456,
+  "batch_size": 16,
+  "val_size": 3513,
+  "test_size": 7024,
+  "evaluated_at": "2026-05-02T11:30:25"
+}
